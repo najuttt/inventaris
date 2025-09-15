@@ -1,4 +1,4 @@
-@extends('layouts.components.super_admin.index')
+@extends('layouts.components.index')
 @section('content')
 <div class="row gy-6">
                 <!-- Weekly Overview Chart -->

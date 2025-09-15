@@ -61,7 +61,7 @@
       <div class="layout-container">
         <!-- Menu -->
 
-        @include('layouts.components.super_admin.sidebar')
+        @include('layouts.components.sidebar')
 
         <!-- / Menu -->
 
@@ -69,7 +69,7 @@
         <div class="layout-page">
           <!-- Navbar -->
 
-          @include('layouts.components.super_admin.navbar')
+          @include('layouts.components.navbar')
 
           <!-- / Navbar -->
 

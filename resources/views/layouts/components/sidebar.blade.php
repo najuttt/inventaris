@@ -70,8 +70,8 @@
           <div class="menu-inner-shadow"></div>
           <ul class="menu-inner py-1">
             <!-- Dashboards -->
-                <li class="menu-item {{ Route::is('dashboard') ? 'active' : ''}}">
-                  <a href="{{route('dashboard')}}" class="menu-link">
+                <li class="menu-item">
+                  <a href="{{route('super_admin.dashboard')}}" class="menu-link">
                     <div data-i18n="Analytics">Dashboard</div>
                   </a>
                 </li>
@@ -330,26 +330,6 @@
               <a href="tables-basic.html" class="menu-link">
                 <i class="menu-icon icon-base ri ri-table-alt-line"></i>
                 <div data-i18n="Tables">Tables</div>
-              </a>
-            </li>
-            <!-- Misc -->
-            <li class="menu-header mt-7"><span class="menu-header-text">Misc</span></li>
-            <li class="menu-item">
-              <a
-                href="https://github.com/themeselection/materio-bootstrap-html-admin-template-free/issues"
-                target="_blank"
-                class="tmenu-link">
-                <i class="menu-icon icon-base ri ri-lifebuoy-line"></i>
-                <div data-i18n="Support">Support</div>
-              </a>
-            </li>
-            <li class="menu-item">
-              <a
-                href="https://demos.themeselection.com/materio-bootstrap-html-admin-template/documentation/"
-                target="_blank"
-                class="menu-link">
-                <i class="menu-icon icon-base ri ri-article-line"></i>
-                <div data-i18n="Documentation">Documentation</div>
               </a>
             </li>
           </ul>

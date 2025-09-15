@@ -24,18 +24,6 @@
 
               <ul class="navbar-nav flex-row align-items-center ms-md-auto">
                 <!-- Place this tag where you want the button to render. -->
-                <li class="nav-item lh-1 me-4">
-                  <a
-                    class="github-button"
-                    href="https://github.com/themeselection/materio-bootstrap-html-admin-template-free"
-                    data-icon="octicon-star"
-                    data-size="large"
-                    data-show-count="true"
-                    aria-label="Star themeselection/materio-html-admin-template-free on GitHub"
-                    >Star</a
-                  >
-                </li>
-
                 <!-- User -->
                 <li class="nav-item navbar-dropdown dropdown-user dropdown">
                   <a
@@ -48,27 +36,34 @@
                   </a>
                   <ul class="dropdown-menu dropdown-menu-end">
                     <li>
-                      <a class="dropdown-item" href="#">
+                      <a class="dropdown-item" href="{{ route('profile.edit') }}">
                         <div class="d-flex">
                           <div class="flex-shrink-0 me-3">
                             <div class="avatar avatar-online">
-                              <img src="{{asset('assets/img/avatars/1.png')}}" alt="alt" class="w-px-40 h-auto rounded-circle" />
+                              <img src="{{ asset('assets/img/avatars/1.png') }}" 
+                                  alt="alt" 
+                                  class="w-px-40 h-auto rounded-circle" />
                             </div>
                           </div>
                           <div class="flex-grow-1">
                             <h6 class="mb-0">{{ Auth::user()->name }}</h6>
-                            <small class="text-body-secondary">Super Admin</small>
+                            <small class="text-body-secondary">{{ Auth::user()->email }}</small>
                           </div>
                         </div>
                       </a>
                     </li>
                     <li>
-                      <div class="d-grid px-4 pt-2 pb-1">
-                        <a class="btn btn-danger d-flex" href="javascript:void(0);">
-                          <small class="align-middle">Logout</small>
-                          <i class="ri ri-logout-box-r-line ms-2 ri-xs"></i>
-                        </a>
-                      </div>
+                      <li>
+                        <div class="d-grid px-4 pt-2 pb-1">
+                          <form method="POST" action="{{ route('logout') }}">
+                            @csrf
+                            <button type="submit" class="btn btn-danger d-flex">
+                              <small class="align-middle">Logout</small>
+                              <i class="ri ri-logout-box-r-line ms-2 ri-xs"></i>
+                            </button>
+                          </form>
+                        </div>
+                      </li>
                     </li>
                   </ul>
                 </li>
