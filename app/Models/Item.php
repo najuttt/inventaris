@@ -11,8 +11,21 @@ class Item extends Model
         'code',
         'category_id',
         'stock',
+        'expired_at',
         'created_by',
     ];
+
+    protected $casts = [
+    'expired_at' => 'datetime',
+    ];
+
+    public function getStatusAttribute()
+    {
+        if ($this->expired_at && $this->expired_at->isFuture()) {
+            return 'no expired';
+        }
+        return 'expired';
+    }
 
     public function category()
     {
@@ -39,6 +52,17 @@ class Item extends Model
         return $this->hasMany(Item_out::class);
     }
 
+    public function unit()
+    {
+        return $this->belongsTo(Unit::class);
+    }
+
+    public function supplier()
+    {
+        return $this->belongsTo(Supplier::class);
+    }
+
+    
     // Auto generate kode unik sebelum create
     protected static function boot()
     {

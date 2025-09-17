@@ -1,4 +1,4 @@
-@extends('layouts.components.index')
+@extends('layouts.index')
 @section('content')
 <div class="row gy-6">
                 <!-- Weekly Overview Chart -->

@@ -1,4 +1,4 @@
-@extends('layouts.components.index')
+@extends('layouts.index')
 @section('content')
   <h1>Halaman Admin</h1>
 @endsection

@@ -5,6 +5,8 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Role\SuperAdminController;
 use App\Http\Controllers\Role\AdminController;
 use App\Http\Controllers\Role\PegawaiController;
+use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\ItemController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -16,29 +18,32 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-//Super_Admin
+// Super Admin
 Route::middleware(['auth', 'role:super_admin'])
     ->prefix('super-admin')
-    ->name('super_admin.')
+    ->as('super_admin.')
     ->group(function () {
         Route::get('/dashboard', [SuperAdminController::class, 'index'])->name('dashboard');
+
+        // CRUD Master Data
+        Route::resource('categories', CategoryController::class);
+        Route::resource('items', ItemController::class);
     });
 
-//Admin
+// Admin
 Route::middleware(['auth', 'role:admin'])
     ->prefix('admin')
-    ->name('admin.')
+    ->as('admin.')
     ->group(function () {
         Route::get('/dashboard', [AdminController::class, 'index'])->name('dashboard');
     });
 
-//Pegawai
+// Pegawai
 Route::middleware(['auth', 'role:pegawai'])
     ->prefix('pegawai')
-    ->name('pegawai.')
+    ->as('pegawai.')
     ->group(function () {
         Route::get('/dashboard', [PegawaiController::class, 'index'])->name('dashboard');
     });
 
-//Load
 require __DIR__.'/auth.php';
