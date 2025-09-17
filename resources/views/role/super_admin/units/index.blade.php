@@ -2,38 +2,25 @@
 @section('content')
 <div class="card">
   <div class="card-header d-flex justify-content-between align-items-center">
-    <h5 class="mb-0">Daftar Item</h5>
-    <a href="{{ route('super_admin.items.create') }}" class="btn btn-sm btn-primary">
+    <h5 class="mb-0">Daftar Satuan Barang</h5>
+    <a href="{{ route('super_admin.units.create') }}" class="btn btn-sm btn-primary">
       <i class="ri ri-add-line me-1"></i> Tambah
     </a>
   </div>
   <div class="table-responsive text-nowrap">
     <table class="table">
-      @forelse($items as $item)
+        @forelse($units as $unit)
       <thead>
         <tr>
-          <th>Kode</th>
-          <th>Nama</th>
-          <th>Kategori</th>
-          <th>Unit</th>
-          <th>Supplier</th>
-          <th>Stock</th>
-          <th>Status</th>
+          <th>Nama Satuan Barang</th>
           <th>Actions</th>
         </tr>
       </thead>
       <tbody class="table-border-bottom-0">
         <tr>
-          <td>{{ $item->code }}</td>
-          <td>{{ $item->name }}</td>
-          <td>{{ $item->category->name ?? '-' }}</td>
-          <td>{{ $item->unit->name ?? '-' }}</td>
-          <td>{{ $item->supplier->name ?? '-' }}</td>
-          <td>{{ $item->stock }}</td>
           <td>
-            <span class="badge {{ $item->status === 'expired' ? 'bg-danger' : 'bg-success' }}">
-              {{ $item->status }}
-            </span>
+            <i class="icon-base ri ri-ruler-line icon-22px text-info me-3"></i>
+            <span>{{ $unit->name }}</span>
           </td>
           <td>
             <div class="dropdown">
@@ -41,13 +28,13 @@
                 <i class="icon-base ri ri-more-2-line icon-18px"></i>
               </button>
               <div class="dropdown-menu">
-                <a class="dropdown-item" href="{{ route('items.edit', $item->id) }}">
+                <a class="dropdown-item" href="{{ route('super_admin.units.edit', $unit->id) }}">
                   <i class="icon-base ri ri-pencil-line icon-18px me-1"></i> Edit
                 </a>
-                <form action="{{ route('items.destroy', $item->id) }}" method="POST">
+                <form action="{{ route('super_admin.units.destroy', $unit->id) }}" method="POST">
                   @csrf
                   @method('DELETE')
-                  <button type="submit" class="dropdown-item" onclick="return confirm('Yakin hapus item ini?')">
+                  <button type="submit" class="dropdown-item" onclick="return confirm('Yakin hapus unit ini?')">
                     <i class="icon-base ri ri-delete-bin-6-line icon-18px me-1"></i> Delete
                   </button>
                 </form>
@@ -57,7 +44,7 @@
         </tr>
         @empty
         <tr>
-          <td colspan="8" class="text-center text-muted py-4">
+          <td colspan="2" class="text-center text-muted py-4">
             <i class="ri-information-line me-1"></i> Belum Ada Data
           </td>
         </tr>

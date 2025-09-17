@@ -7,6 +7,10 @@ use App\Http\Controllers\Role\AdminController;
 use App\Http\Controllers\Role\PegawaiController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ItemController;
+use App\Http\Controllers\Item_inController;
+use App\Http\Controllers\UnitController;
+use App\Http\Controllers\SupplierController;
+use App\Http\Controllers\UserController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -28,6 +32,10 @@ Route::middleware(['auth', 'role:super_admin'])
         // CRUD Master Data
         Route::resource('categories', CategoryController::class);
         Route::resource('items', ItemController::class);
+        Route::resource('item_ins', Item_inController::class);
+        Route::resource('units', UnitController::class);
+        Route::resource('suppliers', SupplierController::class);
+        Route::resource('users', UserController::class);
     });
 
 // Admin
