@@ -43,20 +43,32 @@
                 <!-- Four Cards -->
                 <div class="col-xl-4 col-md-6">
                   <div class="row gy-6">
-                    <!-- Total Profit line chart -->
+
+                    <!-- Total Categories -->
                     <div class="col-sm-6">
                       <div class="card h-100">
-                        <div class="card-header pb-0">
-                          <h4 class="mb-0">$86.4k</h4>
+                        <div class="card-header d-flex align-items-center justify-content-between">
+                          <div class="avatar">
+                            <div class="avatar-initial bg-info rounded-circle shadow-xs">
+                              <i class="icon-base ri ri-folder-2-line icon-24px"></i>
+                            </div>
+                          </div>
                         </div>
                         <div class="card-body">
-                          <div id="totalProfitLineChart" class="mb-3"></div>
-                          <h6 class="text-center mb-0">Total Profit</h6>
+                          <h6 class="mb-1">Categories</h6>
+                          <div class="d-flex flex-wrap mb-1 align-items-center">
+                            <h4 class="mb-0 me-2">{{ $categories }}</h4>
+                            <p class="{{ $categories >= 0 ? 'text-success' : 'text-danger' }} mb-0">
+                              {{ $categories >= 0 ? '+' : '' }}{{ $categories }}%
+                            </p>
+                          </div>
+                          <small>Total Categories</small>
                         </div>
                       </div>
                     </div>
-                    <!--/ Total Profit line chart -->
-                    <!-- Total Profit Weekly Project -->
+                    <!--/ Total Categories -->
+
+                    <!-- Total item -->
                     <div class="col-sm-6">
                       <div class="card h-100">
                         <div class="card-header d-flex align-items-center justify-content-between">
@@ -65,287 +77,147 @@
                               <i class="icon-base ri ri-pie-chart-2-line icon-24px"></i>
                             </div>
                           </div>
-                          <div class="dropdown">
-                            <button
-                              class="btn text-body-secondary p-0"
-                              type="button"
-                              id="totalProfitID"
-                              data-bs-toggle="dropdown"
-                              aria-haspopup="true"
-                              aria-expanded="false">
-                              <i class="icon-base ri ri-more-2-line icon-24px"></i>
-                            </button>
-                            <div class="dropdown-menu dropdown-menu-end" aria-labelledby="totalProfitID">
-                              <a class="dropdown-item" href="javascript:void(0);">Refresh</a>
-                              <a class="dropdown-item" href="javascript:void(0);">Share</a>
-                              <a class="dropdown-item" href="javascript:void(0);">Update</a>
-                            </div>
-                          </div>
                         </div>
                         <div class="card-body">
-                          <h6 class="mb-1">Total Profit</h6>
+                          <h6 class="mb-1">Barang</h6>
                           <div class="d-flex flex-wrap mb-1 align-items-center">
-                            <h4 class="mb-0 me-2">$25.6k</h4>
-                            <p class="text-success mb-0">+42%</p>
+                            <h4 class="mb-0 me-2">{{ $item }}</h4>
+                            <p class="{{ $item >= 0 ? 'text-success' : 'text-danger' }} mb-0">
+                              {{ $item >= 0 ? '+' : '' }}{{ $item }}%
+                            </p>
                           </div>
-                          <small>Weekly Project</small>
+                          <small>Total Barang</small>
                         </div>
                       </div>
                     </div>
-                    <!--/ Total Profit Weekly Project -->
-                    <!-- New Yearly Project -->
+                    <!--/ Total item -->
+
+                    <!-- Total Suppliers -->
                     <div class="col-sm-6">
                       <div class="card h-100">
                         <div class="card-header d-flex align-items-center justify-content-between">
                           <div class="avatar">
                             <div class="avatar-initial bg-primary rounded-circle shadow-xs">
-                              <i class="icon-base ri ri-file-word-2-line icon-24px"></i>
-                            </div>
-                          </div>
-                          <div class="dropdown">
-                            <button
-                              class="btn text-body-secondary p-0"
-                              type="button"
-                              id="newProjectID"
-                              data-bs-toggle="dropdown"
-                              aria-haspopup="true"
-                              aria-expanded="false">
-                              <i class="icon-base ri ri-more-2-line icon-24px"></i>
-                            </button>
-                            <div class="dropdown-menu dropdown-menu-end" aria-labelledby="newProjectID">
-                              <a class="dropdown-item" href="javascript:void(0);">Refresh</a>
-                              <a class="dropdown-item" href="javascript:void(0);">Share</a>
-                              <a class="dropdown-item" href="javascript:void(0);">Update</a>
+                              <i class="icon-base ri ri-truck-line icon-24px"></i>
                             </div>
                           </div>
                         </div>
                         <div class="card-body">
-                          <h6 class="mb-1">New Project</h6>
+                          <h6 class="mb-1">Suppliers</h6>
                           <div class="d-flex flex-wrap mb-1 align-items-center">
-                            <h4 class="mb-0 me-2">862</h4>
-                            <p class="text-danger mb-0">-18%</p>
+                            <h4 class="mb-0 me-2">{{ $suppliers }}</h4>
+                            <p class="{{ $suppliers >= 0 ? 'text-success' : 'text-danger' }} mb-0">
+                              {{ $suppliers >= 0 ? '+' : '' }}{{ $suppliers }}%
+                            </p>
                           </div>
-                          <small>Yearly Project</small>
+                          <small>Total Suppliers</small>
                         </div>
                       </div>
                     </div>
-                    <!--/ New Yearly Project -->
-                    <!-- Sessions chart -->
+                    <!--/ Total Suppliers -->
+
+                    <!-- Total Users -->
                     <div class="col-sm-6">
                       <div class="card h-100">
-                        <div class="card-header pb-0">
-                          <h4 class="mb-0">2,856</h4>
+                        <div class="card-header d-flex align-items-center justify-content-between">
+                          <div class="avatar">
+                            <div class="avatar-initial bg-warning rounded-circle shadow-xs">
+                              <i class="icon-base ri ri-user-3-line icon-24px"></i>
+                            </div>
+                          </div>
                         </div>
                         <div class="card-body">
-                          <div id="sessionsColumnChart" class="mb-3"></div>
-                          <h6 class="text-center mb-0">Sessions</h6>
+                          <h6 class="mb-1">Users</h6>
+                          <div class="d-flex flex-wrap mb-1 align-items-center">
+                            <h4 class="mb-0 me-2">{{ $users }}</h4>
+                            <p class="{{ $users >= 0 ? 'text-success' : 'text-danger' }} mb-0">
+                              {{ $users >= 0 ? '+' : '' }}{{ $users }}%
+                            </p>
+                          </div>
+                          <small>Total Users</small>
                         </div>
                       </div>
                     </div>
-                    <!--/ Sessions chart -->
+                    <!--/ Total Users -->
                   </div>
                 </div>
                 <!--/ four cards -->
-                <!-- Deposit / Withdraw -->
+                <!-- Barang Masuk / Barang Keluar -->
                 <div class="col-xl-8">
                   <div class="card-group">
+                    {{-- Barang Masuk --}}
                     <div class="card mb-0">
                       <div class="card-body card-separator">
                         <div class="d-flex justify-content-between align-items-center flex-wrap mb-4">
-                          <h5 class="m-0 me-2">Deposit</h5>
-                          <a class="fw-medium" href="javascript:void(0);">View all</a>
+                          <h5 class="m-0 me-2">History Barang Masuk</h5>
+                          <a class="fw-medium" href="{{ route('super_admin.item_ins.index') }}">View all</a>
                         </div>
                         <div class="deposit-content pt-2">
                           <ul class="p-0 m-0">
-                            <li class="d-flex mb-4 align-items-center pb-2">
-                              <div class="flex-shrink-0 me-4">
-                                <img
-                                  src="{{asset('assets/img/icons/payments/gumroad.png')}}"
-                                  class="img-fluid"
-                                  alt="gumroad"
-                                  height="30"
-                                  width="30" />
-                              </div>
-                              <div class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
-                                <div class="me-2">
-                                  <h6 class="mb-0">Gumroad Account</h6>
-                                  <p class="mb-0">Sell UI Kit</p>
+                            @forelse($itemIns as $item)
+                              <li class="d-flex mb-4 align-items-center pb-2">
+                                <div class="flex-shrink-0 me-4">
+                                  <img
+                                    src="{{ asset('assets/img/icons/payments/stripes.png') }}"
+                                    class="img-fluid"
+                                    alt="barang"
+                                    height="30"
+                                    width="30" />
                                 </div>
-                                <h6 class="text-success mb-0">+$4,650</h6>
-                              </div>
-                            </li>
-                            <li class="d-flex mb-4 align-items-center pb-2">
-                              <div class="flex-shrink-0 me-4">
-                                <img
-                                  src="{{asset('assets/img/icons/payments/mastercard-2.png')}}"
-                                  class="img-fluid"
-                                  alt="mastercard"
-                                  height="30"
-                                  width="30" />
-                              </div>
-                              <div class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
-                                <div class="me-2">
-                                  <h6 class="mb-0">Mastercard</h6>
-                                  <p class="mb-0">Wallet deposit</p>
+                                <div class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
+                                  <div class="me-2">
+                                    <h6 class="mb-0">{{ $item->item->name }}</h6>
+                                    <p class="mb-0">Jumlah: {{ $item->quantity }}</p>
+                                  </div>
+                                  <h6 class="text-success mb-0">+{{ $item->quantity }}</h6>
                                 </div>
-                                <h6 class="text-success mb-0">+$92,705</h6>
-                              </div>
-                            </li>
-                            <li class="d-flex mb-4 align-items-center pb-2">
-                              <div class="flex-shrink-0 me-4">
-                                <img
-                                  src="{{asset('assets/img/icons/payments/stripes.png')}}"
-                                  class="img-fluid"
-                                  alt="stripes"
-                                  height="30"
-                                  width="30" />
-                              </div>
-                              <div class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
-                                <div class="me-2">
-                                  <h6 class="mb-0">Stripe Account</h6>
-                                  <p class="mb-0">iOS Application</p>
-                                </div>
-                                <h6 class="text-success mb-0">+$957</h6>
-                              </div>
-                            </li>
-                            <li class="d-flex mb-4 align-items-center pb-2">
-                              <div class="flex-shrink-0 me-4">
-                                <img
-                                  src="{{asset('assets/img/icons/payments/american-bank.png')}}"
-                                  class="img-fluid"
-                                  alt="american"
-                                  height="30"
-                                  width="30" />
-                              </div>
-                              <div class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
-                                <div class="me-2">
-                                  <h6 class="mb-0">American Bank</h6>
-                                  <p class="mb-0">Bank Transfer</p>
-                                </div>
-                                <h6 class="text-success mb-0">+$6,837</h6>
-                              </div>
-                            </li>
-                            <li class="d-flex align-items-center">
-                              <div class="flex-shrink-0 me-4">
-                                <img
-                                  src="{{asset('assets/img/icons/payments/citi.png')}}"
-                                  class="img-fluid"
-                                  alt="citi"
-                                  height="30"
-                                  width="30" />
-                              </div>
-                              <div class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
-                                <div class="me-2">
-                                  <h6 class="mb-0">Bank Account</h6>
-                                  <p class="mb-0">Wallet deposit</p>
-                                </div>
-                                <h6 class="text-success mb-0">+$446</h6>
-                              </div>
-                            </li>
+                              </li>
+                            @empty
+                              <li class="d-flex align-items-center">
+                                <p class="mb-0 text-muted">Belum ada data barang masuk</p>
+                              </li>
+                            @endforelse
                           </ul>
                         </div>
                       </div>
                     </div>
+
+                    {{-- Barang Keluar --}}
                     <div class="card mb-0">
                       <div class="card-body">
                         <div class="d-flex justify-content-between align-items-center flex-wrap mb-4">
-                          <h5 class="m-0 me-2">Withdraw</h5>
-                          <a class="fw-medium" href="javascript:void(0);">View all</a>
+                          <h5 class="m-0 me-2">History Barang Keluar</h5>
+                          <a class="fw-medium" href="">View all</a>
                         </div>
                         <div class="withdraw-content pt-2">
                           <ul class="p-0 m-0">
-                            <li class="d-flex mb-4 align-items-center pb-2">
-                              <div class="flex-shrink-0 me-4">
-                                <img
-                                  src="{{asset('assets/img/icons/brands/google.png')}}"
-                                  class="img-fluid"
-                                  alt="google"
-                                  height="30"
-                                  width="30" />
-                              </div>
-                              <div class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
-                                <div class="me-2">
-                                  <h6 class="mb-0">Google Adsense</h6>
-                                  <p class="mb-0">Paypal deposit</p>
+                              <li class="d-flex mb-4 align-items-center pb-2">
+                                <div class="flex-shrink-0 me-4">
+                                  <img
+                                    src="{{ asset('assets/img/icons/payments/digital-ocean.png') }}"
+                                    class="img-fluid"
+                                    alt="barang"
+                                    height="30"
+                                    width="30" />
                                 </div>
-                                <h6 class="text-danger mb-0">-$145</h6>
-                              </div>
-                            </li>
-                            <li class="d-flex mb-4 align-items-center pb-2">
-                              <div class="flex-shrink-0 me-4">
-                                <img
-                                  src="{{asset('assets/img/icons/brands/github.png')}}"
-                                  class="img-fluid"
-                                  alt="github"
-                                  height="30"
-                                  width="30" />
-                              </div>
-                              <div class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
-                                <div class="me-2">
-                                  <h6 class="mb-0">Github Enterprise</h6>
-                                  <p class="mb-0">Security &amp; compliance</p>
+                                <div class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
+                                  <div class="me-2">
+                                    <h6 class="mb-0"></h6>
+                                    <p class="mb-0">Jumlah:</p>
+                                  </div>
+                                  <h6 class="text-danger mb-0">-</h6>
                                 </div>
-                                <h6 class="text-danger mb-0">-$1870</h6>
-                              </div>
-                            </li>
-                            <li class="d-flex mb-4 align-items-center pb-2">
-                              <div class="flex-shrink-0 me-4">
-                                <img
-                                  src="{{asset('assets/img/icons/brands/slack.png')}}"
-                                  class="img-fluid"
-                                  alt="slack"
-                                  height="30"
-                                  width="30" />
-                              </div>
-                              <div class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
-                                <div class="me-2">
-                                  <h6 class="mb-0">Upgrade Slack Plan</h6>
-                                  <p class="mb-0">Debit card deposit</p>
-                                </div>
-                                <h6 class="text-danger mb-0">$450</h6>
-                              </div>
-                            </li>
-                            <li class="d-flex mb-4 align-items-center pb-2">
-                              <div class="flex-shrink-0 me-4">
-                                <img
-                                  src="{{asset('assets/img/icons/payments/digital-ocean.png')}}"
-                                  class="img-fluid"
-                                  alt="digital"
-                                  height="30"
-                                  width="30" />
-                              </div>
-                              <div class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
-                                <div class="me-2">
-                                  <h6 class="mb-0">Digital Ocean</h6>
-                                  <p class="mb-0">Cloud Hosting</p>
-                                </div>
-                                <h6 class="text-danger mb-0">-$540</h6>
-                              </div>
-                            </li>
-                            <li class="d-flex align-items-center">
-                              <div class="flex-shrink-0 me-4">
-                                <img
-                                  src="{{asset('assets/img/icons/brands/aws.png')}}"
-                                  class="img-fluid"
-                                  alt="aws"
-                                  height="30"
-                                  width="30" />
-                              </div>
-                              <div class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
-                                <div class="me-2">
-                                  <h6 class="mb-0">AWS Account</h6>
-                                  <p class="mb-0">Choosing a Cloud Platform</p>
-                                </div>
-                                <h6 class="text-danger mb-0">-$21</h6>
-                              </div>
-                            </li>
+                              </li>
+                              <li class="d-flex align-items-center">
+                                <p class="mb-0 text-muted">Belum ada data barang keluar</p>
+                              </li>
                           </ul>
                         </div>
                       </div>
                     </div>
                   </div>
                 </div>
-                <!-- Deposit / Withdraw -->
+                <!-- Barang Masuk / Barang Keluar -->
 
                 <!-- Data Tables -->
                 <div class="col-12">

@@ -4,6 +4,12 @@ namespace App\Http\Controllers\Role;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Models\Category;
+use App\Models\Item;
+use App\Models\Supplier;
+use App\Models\User;
+use App\Models\Item_in;
+use App\Models\Item_out;
 
 class SuperAdminController extends Controller
 {
@@ -12,7 +18,18 @@ class SuperAdminController extends Controller
      */
     public function index()
     {
-        return view('role.super_admin.dashboard');
+        $categories = Category::count();
+        $item      = Item::count();
+        $suppliers  = Supplier::count();
+        $users      = User::count();
+
+        // Ambil history terbaru barang masuk (limit 5)
+        $itemIns = Item_in::with('item')
+            ->latest()
+            ->take(5)
+            ->get();
+
+        return view('role.super_admin.dashboard', compact('categories', 'item', 'suppliers', 'users', 'itemIns'));
     }
 
     /**

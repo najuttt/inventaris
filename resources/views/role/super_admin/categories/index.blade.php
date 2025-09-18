@@ -9,13 +9,13 @@
     </div>
     <div class="table-responsive text-nowrap">
         <table class="table">
-            @forelse($categories as $category)
             <thead>
                 <tr>
                     <th>Nama Kategori</th>
                     <th>Actions</th>
                 </tr>
             </thead>
+            @forelse($categories as $category)
             <tbody class="table-border-bottom-0">
                 <tr>
                     <td>

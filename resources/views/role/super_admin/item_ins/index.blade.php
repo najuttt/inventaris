@@ -9,7 +9,6 @@
     </div>
     <div class="table-responsive text-nowrap">
         <table class="table">
-            @forelse($items_in as $row)
             <thead>
                 <tr>
                     <th>Item</th>
@@ -21,10 +20,10 @@
                     <th>Actions</th>
                 </tr>
             </thead>
+            @forelse($items_in as $row)
             <tbody class="table-border-bottom-0">
                 <tr>
                     <td>
-                        <i class="ri ri-cube-line icon-22px text-info me-3"></i>
                         <span>{{ $row->item->name ?? '-' }}</span>
                     </td>
                     <td>{{ $row->quantity }}</td>

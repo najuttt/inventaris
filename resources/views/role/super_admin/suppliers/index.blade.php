@@ -9,7 +9,6 @@
   </div>
   <div class="table-responsive text-nowrap">
     <table class="table">
-    @forelse($suppliers as $supplier)
       <thead>
         <tr>
           <th>Nama Supplier</th>
@@ -17,6 +16,7 @@
           <th>Actions</th>
         </tr>
       </thead>
+      @forelse($suppliers as $supplier)
       <tbody class="table-border-bottom-0">
         <tr>
           <td>

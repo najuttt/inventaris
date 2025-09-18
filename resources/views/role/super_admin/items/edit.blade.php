@@ -71,14 +71,6 @@
             </div>
           </div>
 
-          <div class="row mb-4">
-            <label class="col-sm-2 col-form-label">Expired At</label>
-            <div class="col-sm-10">
-              <input type="date" name="expired_at" value="{{ $item->expired_at?->format('Y-m-d') }}" class="form-control">
-              @error('expired_at') <small class="text-danger">{{ $message }}</small> @enderror
-            </div>
-          </div>
-
           <div class="row justify-content-end">
             <div class="col-sm-10">
               <button type="submit" class="btn btn-primary btn-sm">Update</button>

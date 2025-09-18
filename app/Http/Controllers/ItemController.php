@@ -8,6 +8,8 @@ use App\Models\Unit;
 use App\Models\Supplier;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Milon\Barcode\DNS1D;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class ItemController extends Controller
 {
@@ -43,6 +45,34 @@ class ItemController extends Controller
         return redirect()->route('super_admin.items.index')->with('success', 'Item berhasil ditambahkan.');
     }
 
+    public function show(Request $request, Item $item)
+    {
+        $supplierId = $request->get('supplier_id');
+
+        $itemInQuery = $item->itemIn();
+
+        if ($supplierId) {
+            $itemInQuery->where('supplier_id', $supplierId);
+        }
+
+        $itemIns = $itemInQuery->get();
+
+        $expiredCount = $itemIns->where('expired_at', '<', now())->sum('quantity');
+        $nonExpiredCount = $itemIns->where('expired_at', '>=', now())->sum('quantity');
+
+        $suppliers = \App\Models\Supplier::all();
+
+        return view('role.super_admin.items.show', compact(
+            'item',
+            'suppliers',
+            'supplierId',
+            'expiredCount',
+            'nonExpiredCount'
+        ));
+    }
+
+
+
     public function edit(Item $item)
     {
         $categories = Category::all();
@@ -71,5 +101,11 @@ class ItemController extends Controller
     {
         $item->delete();
         return redirect()->route('super_admin.items.index')->with('success', 'Item berhasil dihapus.');
+    }
+
+    public function printBarcode(Item $item)
+    {
+        $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('role.super_admin.items.barcode-pdf', compact('item'));
+        return $pdf->download('barcode-'.$item->code.'.pdf');
     }
 }

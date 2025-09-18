@@ -22,7 +22,6 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-// Super Admin
 Route::middleware(['auth', 'role:super_admin'])
     ->prefix('super-admin')
     ->as('super_admin.')
@@ -36,9 +35,12 @@ Route::middleware(['auth', 'role:super_admin'])
         Route::resource('units', UnitController::class);
         Route::resource('suppliers', SupplierController::class);
         Route::resource('users', UserController::class);
+
+        //Barcode
+        Route::get('items/{item}/barcode-pdf', [ItemController::class, 'printBarcode'])
+            ->name('items.barcode.pdf');
     });
 
-// Admin
 Route::middleware(['auth', 'role:admin'])
     ->prefix('admin')
     ->as('admin.')
@@ -46,7 +48,6 @@ Route::middleware(['auth', 'role:admin'])
         Route::get('/dashboard', [AdminController::class, 'index'])->name('dashboard');
     });
 
-// Pegawai
 Route::middleware(['auth', 'role:pegawai'])
     ->prefix('pegawai')
     ->as('pegawai.')

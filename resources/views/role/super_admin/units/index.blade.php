@@ -9,13 +9,13 @@
   </div>
   <div class="table-responsive text-nowrap">
     <table class="table">
-        @forelse($units as $unit)
       <thead>
         <tr>
           <th>Nama Satuan Barang</th>
           <th>Actions</th>
         </tr>
       </thead>
+      @forelse($units as $unit)
       <tbody class="table-border-bottom-0">
         <tr>
           <td>

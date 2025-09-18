@@ -34,10 +34,10 @@
           </div>
 
           <div class="row mb-4">
-            <label class="col-sm-2 col-form-label">Unit</label>
+            <label class="col-sm-2 col-form-label">Satuan Barang</label>
             <div class="col-sm-10">
               <select name="unit_id" class="form-control" required>
-                <option value="">-- Pilih Unit --</option>
+                <option value="">-- Pilih Satuan --</option>
                 @foreach($units as $unit)
                   <option value="{{ $unit->id }}">{{ $unit->name }}</option>
                 @endforeach
@@ -64,14 +64,6 @@
             <div class="col-sm-10">
               <input type="number" name="stock" class="form-control" placeholder="Isi stock" required>
               @error('stock') <small class="text-danger">{{ $message }}</small> @enderror
-            </div>
-          </div>
-
-          <div class="row mb-4">
-            <label class="col-sm-2 col-form-label">Expired At</label>
-            <div class="col-sm-10">
-              <input type="date" name="expired_at" class="form-control">
-              @error('expired_at') <small class="text-danger">{{ $message }}</small> @enderror
             </div>
           </div>
 

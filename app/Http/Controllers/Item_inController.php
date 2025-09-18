@@ -26,21 +26,26 @@ class Item_inController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'item_id' => 'required|exists:items,id',
-            'quantity' => 'required|integer|min:1',
+            'item_id'     => 'required|exists:items,id',
+            'quantity'    => 'required|integer|min:1',
             'supplier_id' => 'required|exists:suppliers,id',
-            'expired_at' => 'nullable|date',
+            'expired_at'  => 'nullable|date',
         ]);
 
-        Item_in::create([
-            'item_id' => $request->item_id,
-            'quantity' => $request->quantity,
+        $item_in = Item_in::create([
+            'item_id'     => $request->item_id,
+            'quantity'    => $request->quantity,
             'supplier_id' => $request->supplier_id,
-            'expired_at' => $request->expired_at,
-            'created_by' => Auth::id(),
+            'expired_at'  => $request->expired_at,
+            'created_by'  => Auth::id(),
         ]);
 
-        return redirect()->route('super_admin.item_ins.index')->with('success', 'Data berhasil ditambahkan');
+        // Update stok di item
+        $item = Item::findOrFail($request->item_id);
+        $item->stock += $request->quantity;
+        $item->save();
+
+        return redirect()->route('super_admin.item_ins.index')->with('success', 'Data berhasil ditambahkan & stok diperbarui');
     }
 
     public function edit(Item_in $item_in)
@@ -53,25 +58,55 @@ class Item_inController extends Controller
     public function update(Request $request, Item_in $item_in)
     {
         $request->validate([
-            'item_id' => 'required|exists:items,id',
-            'quantity' => 'required|integer|min:1',
+            'item_id'     => 'required|exists:items,id',
+            'quantity'    => 'required|integer|min:1',
             'supplier_id' => 'required|exists:suppliers,id',
-            'expired_at' => 'nullable|date',
+            'expired_at'  => 'nullable|date',
         ]);
 
+        $oldItemId = $item_in->item_id;
+        $oldQty    = $item_in->quantity;
+
+        // Jika item berubah
+        if ($oldItemId != $request->item_id) {
+            // Kurangi stok dari item lama
+            $oldItem = Item::findOrFail($oldItemId);
+            $oldItem->stock -= $oldQty;
+            $oldItem->save();
+
+            // Tambah stok ke item baru
+            $newItem = Item::findOrFail($request->item_id);
+            $newItem->stock += $request->quantity;
+            $newItem->save();
+        } else {
+            // Jika item sama, cukup update selisih quantity
+            $diff = $request->quantity - $oldQty;
+            $item = Item::findOrFail($request->item_id);
+            $item->stock += $diff;
+            $item->save();
+        }
+
+        // Update transaksi
         $item_in->update([
-            'item_id' => $request->item_id,
-            'quantity' => $request->quantity,
+            'item_id'     => $request->item_id,
+            'quantity'    => $request->quantity,
             'supplier_id' => $request->supplier_id,
-            'expired_at' => $request->expired_at,
+            'expired_at'  => $request->expired_at,
         ]);
 
-        return redirect()->route('super_admin.item_ins.index')->with('success', 'Data berhasil diupdate');
+        return redirect()->route('super_admin.item_ins.index')->with('success', 'Data berhasil diupdate & stok diperbarui');
     }
 
     public function destroy(Item_in $item_in)
     {
+        // Kurangi stok sesuai qty yang dihapus
+        $item = Item::findOrFail($item_in->item_id);
+        $item->stock -= $item_in->quantity;
+        $item->save();
+
+        // Hapus transaksi
         $item_in->delete();
-        return redirect()->route('super_admin.item_ins.index')->with('success', 'Data berhasil dihapus');
+
+        return redirect()->route('super_admin.item_ins.index')->with('success', 'Data berhasil dihapus & stok diperbarui');
     }
 }

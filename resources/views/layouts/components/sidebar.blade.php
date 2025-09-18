@@ -38,37 +38,37 @@
             <li class="menu-header mt-7">
               <span class="menu-header-text">Super Admin</span>
             </li>
-            <li class="menu-item">
+            <li class="menu-item {{ Route::is('super_admin.categories.index') ? 'active' : '' }}">
               <a href="{{route('super_admin.categories.index')}}" class="menu-link">
                 <i class="menu-icon icon-base ri ri-stack-line"></i>
                 <div data-i18n="Basic">Kategori</div>
               </a>
             </li>
-            <li class="menu-item">
+            <li class="menu-item {{ Route::is('super_admin.units.index') ? 'active' : '' }}">
               <a href="{{route('super_admin.units.index')}}" class="menu-link">
                 <i class="menu-icon icon-base ri ri-price-tag-3-line"></i>
                 <div data-i18n="Basic">Satuan Barang</div><div class=""></div>
               </a>
             </li>
-            <li class="menu-item">
+            <li class="menu-item {{ Route::is('super_admin.suppliers.index') ? 'active' : '' }}">
               <a href="{{route('super_admin.suppliers.index')}}" class="menu-link">
                 <i class="menu-icon icon-base ri ri-briefcase-3-line"></i>
                 <div data-i18n="Basic">Supplier</div><div class=""></div>
               </a>
             </li>
-            <li class="menu-item">
+            <li class="menu-item {{ Route::is('super_admin.items.index') ? 'active' : '' }}">
               <a href="{{route('super_admin.items.index')}}" class="menu-link">
                 <i class="menu-icon icon-base ri ri-box-3-line"></i>
                 <div data-i18n="Basic">Barang</div>
               </a>
             </li>
-            <li class="menu-item">
+            <li class="menu-item {{ Route::is('super_admin.item_ins.index') ? 'active' : '' }}">
               <a href="{{route('super_admin.item_ins.index')}}" class="menu-link">
                 <i class="menu-icon icon-base ri ri-inbox-archive-line"></i>
                 <div data-i18n="Basic">Barang Masuk</div>
               </a>
             </li>
-            <li class="menu-item">
+            <li class="menu-item {{ Route::is('super_admin.users.index') ? 'active' : '' }}">
               <a href="{{route('super_admin.users.index')}}" class="menu-link">
                 <i class="menu-icon icon-base ri ri-group-line"></i>
                 <div data-i18n="Basic">List Pegawai</div><div class=""></div>
