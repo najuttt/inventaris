@@ -13,11 +13,12 @@ return new class extends Migration
             $table->string('name');
             $table->string('code')->unique();
             $table->foreignId('category_id')->constrained()->onDelete('cascade');
-            $table->integer('stock')->default(0);
+            $table->integer('stock')->default(0)->nullable();
             $table->date('expired_at')->nullable();
             $table->unsignedBigInteger('supplier_id')->nullable();
             $table->unsignedBigInteger('unit_id')->nullable();
             $table->foreignId('created_by')->constrained('users')->onDelete('cascade');
+            $table->string('image')->nullable();
             $table->timestamps();
         });
     }

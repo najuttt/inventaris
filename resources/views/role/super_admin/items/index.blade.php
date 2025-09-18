@@ -41,6 +41,7 @@
                                 </a>
                                 {{-- Show --}}
                                 <a class="dropdown-item" href="{{ route('super_admin.items.show', $item->id) }}">
+                                  <i class="ri ri-eye-line icon-18px me-1"></i>
                                   Show
                                 </a>
                                 {{-- Edit --}}

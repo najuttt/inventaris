@@ -9,7 +9,7 @@
         <small class="text-body-secondary">Form ubah data item</small>
       </div>
       <div class="card-body">
-        <form action="{{ route('super_admin.items.update', $item->id) }}" method="POST">
+        <form action="{{ route('super_admin.items.update', $item->id) }}" method="POST" enctype="multipart/form-data">
           @csrf
           @method('PUT')
 
@@ -69,6 +69,17 @@
               <input type="number" name="stock" class="form-control" value="{{ $item->stock }}" required>
               @error('stock') <small class="text-danger">{{ $message }}</small> @enderror
             </div>
+          </div>
+
+          <div class="form-group">
+            <label for="image">Gambar (opsional)</label>
+              <input type="file" name="image" class="form-control">
+              @if($item->image)
+                  <div class="mt-2">
+                      <p>Gambar saat ini:</p>
+                      <img src="{{ asset('storage/' . $item->image) }}" alt="Gambar Item" width="120">
+                  </div>
+              @endif
           </div>
 
           <div class="row justify-content-end">

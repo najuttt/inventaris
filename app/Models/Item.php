@@ -16,6 +16,7 @@ class Item extends Model
         'supplier_id',
         'expired_at',
         'created_by',
+        'image',
     ];
 
     public function getExpiredCountAttribute()

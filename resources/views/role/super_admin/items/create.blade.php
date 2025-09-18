@@ -9,7 +9,7 @@
         <small class="text-body-secondary">Form input item baru</small>
       </div>
       <div class="card-body">
-        <form action="{{ route('super_admin.items.store') }}" method="POST">
+        <form action="{{ route('super_admin.items.store') }}" method="POST" enctype="multipart/form-data">
           @csrf
 
           <div class="row mb-4">
@@ -65,6 +65,14 @@
               <input type="number" name="stock" class="form-control" placeholder="Isi stock" required>
               @error('stock') <small class="text-danger">{{ $message }}</small> @enderror
             </div>
+          </div>zz
+
+          <div class="form-group mb-4">
+              <label for="image">Gambar</label>
+              <input type="file" name="image" id="image" class="form-control">
+              @if(isset($item) && $item->image)
+                  <img src="{{ asset('storage/' . $item->image) }}" alt="Gambar" width="100" class="mt-2">
+              @endif
           </div>
 
           <div class="row justify-content-end">
@@ -77,5 +85,5 @@
       </div>
     </div>
   </div>
-</div>
+</div>  
 @endsection

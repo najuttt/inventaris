@@ -8,7 +8,7 @@ use App\Models\Unit;
 use App\Models\Supplier;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Milon\Barcode\DNS1D;
+use Illuminate\Support\Facades\Storage;
 use Barryvdh\DomPDF\Facade\Pdf;
 
 class ItemController extends Controller
@@ -36,9 +36,15 @@ class ItemController extends Controller
             'supplier_id' => 'required|exists:suppliers,id',
             'stock'       => 'required|integer|min:0',
             'expired_at'  => 'nullable|date',
+            'image'       => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
         ]);
 
         $validated['created_by'] = Auth::id();
+
+        // Simpan gambar jika ada
+        if ($request->hasFile('image')) {
+            $validated['image'] = $request->file('image')->store('images/items', 'public');
+        }
 
         Item::create($validated);
 
@@ -60,7 +66,7 @@ class ItemController extends Controller
         $expiredCount = $itemIns->where('expired_at', '<', now())->sum('quantity');
         $nonExpiredCount = $itemIns->where('expired_at', '>=', now())->sum('quantity');
 
-        $suppliers = \App\Models\Supplier::all();
+        $suppliers = Supplier::all();
 
         return view('role.super_admin.items.show', compact(
             'item',
@@ -70,8 +76,6 @@ class ItemController extends Controller
             'nonExpiredCount'
         ));
     }
-
-
 
     public function edit(Item $item)
     {
@@ -90,7 +94,17 @@ class ItemController extends Controller
             'supplier_id' => 'required|exists:suppliers,id',
             'stock'       => 'required|integer|min:0',
             'expired_at'  => 'nullable|date',
+            'image'       => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
         ]);
+
+        // Hapus gambar lama jika diganti
+        if ($request->hasFile('image')) {
+            if ($item->image && Storage::disk('public')->exists($item->image)) {
+                Storage::disk('public')->delete($item->image);
+            }
+
+            $validated['image'] = $request->file('image')->store('images/items', 'public');
+        }
 
         $item->update($validated);
 
@@ -99,13 +113,18 @@ class ItemController extends Controller
 
     public function destroy(Item $item)
     {
+        // Hapus gambar jika ada
+        if ($item->image && Storage::disk('public')->exists($item->image)) {
+            Storage::disk('public')->delete($item->image);
+        }
+
         $item->delete();
         return redirect()->route('super_admin.items.index')->with('success', 'Item berhasil dihapus.');
     }
 
     public function printBarcode(Item $item)
     {
-        $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('role.super_admin.items.barcode-pdf', compact('item'));
-        return $pdf->download('barcode-'.$item->code.'.pdf');
+        $pdf = Pdf::loadView('role.super_admin.items.barcode-pdf', compact('item'));
+        return $pdf->download('barcode-' . $item->code . '.pdf');
     }
 }

@@ -2,7 +2,7 @@
 @section('content')
 <div class="card">
     <div class="card-header d-flex justify-content-between align-items-center">
-        <h5 class="mb-0">Daftar Item Masuk</h5>
+        <h5 class="mb-0">Daftar Barang Masuk</h5>
         <a href="{{ route('super_admin.item_ins.create') }}" class="btn btn-sm btn-primary">
             <i class="ri ri-add-line me-1"></i> Tambah
         </a>
@@ -11,7 +11,7 @@
         <table class="table">
             <thead>
                 <tr>
-                    <th>Item</th>
+                    <th>Barang</th>
                     <th>Qty</th>
                     <th>Supplier</th>
                     <th>Expired</th>
