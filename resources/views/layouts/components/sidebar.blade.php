@@ -3,7 +3,7 @@
             <a href="index.html" class="app-brand-link">
               <span class="app-brand-logo demo me-1">
                 <span class="text-primary">
-                  
+
                 </span>
               </span>
               <span class="app-brand-text demo menu-text fw-semibold ms-2">SIMBA</span>
@@ -82,28 +82,21 @@
             <li class="menu-item">
               <a href="cards-basic.html" class="menu-link">
                 <i class="menu-icon icon-base ri ri-bank-card-2-line"></i>
-                <div data-i18n="Basic">Cards</div>
+                <div data-i18n="Basic">Scan Qr</div>
               </a>
             </li>
             <!-- Cards -->
             <li class="menu-item">
               <a href="cards-basic.html" class="menu-link">
                 <i class="menu-icon icon-base ri ri-bank-card-2-line"></i>
-                <div data-i18n="Basic">Cards</div>
+                <div data-i18n="Basic">Request</div>
               </a>
             </li>
             <!-- Cards -->
             <li class="menu-item">
               <a href="cards-basic.html" class="menu-link">
                 <i class="menu-icon icon-base ri ri-bank-card-2-line"></i>
-                <div data-i18n="Basic">Cards</div>
-              </a>
-            </li>
-            <!-- Cards -->
-            <li class="menu-item">
-              <a href="cards-basic.html" class="menu-link">
-                <i class="menu-icon icon-base ri ri-bank-card-2-line"></i>
-                <div data-i18n="Basic">Cards</div>
+                <div data-i18n="Basic">Guest</div>
               </a>
             </li>
             @endif

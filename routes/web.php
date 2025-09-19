@@ -16,6 +16,8 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+
+
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
@@ -46,6 +48,8 @@ Route::middleware(['auth', 'role:admin'])
     ->as('admin.')
     ->group(function () {
         Route::get('/dashboard', [AdminController::class, 'index'])->name('dashboard');
+        Route::get('/dashboard/data', [AdminController::class, 'getChartData']);
+
     });
 
 Route::middleware(['auth', 'role:pegawai'])

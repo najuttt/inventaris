@@ -6,7 +6,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class Item_out extends Model
 {
-    protected $table = 'item_out';
+    protected $table = 'item_outs';
+
 
     protected $fillable = [
         'item_id',
@@ -14,16 +15,16 @@ class Item_out extends Model
         'cart_id',
         'approved_by',
         'released_at',
-    ];
-
-    public function item()
-    {
-        return $this->belongsTo(Item::class);
-    }
+];
 
     public function cart()
     {
         return $this->belongsTo(Cart::class);
+    }
+
+    public function item()
+    {
+        return $this->belongsTo(Item::class, 'item_id');
     }
 
     public function approver()
