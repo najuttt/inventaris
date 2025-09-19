@@ -10,8 +10,9 @@ return new class extends Migration
     {
         Schema::create('export_logs', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('admin_id')->constrained('users')->onDelete('cascade');
+            $table->foreignId('super_admin_id')->constrained('users')->onDelete('cascade');
             $table->enum('type', ['weekly', 'monthly', 'yearly']);
+            $table->enum('format', ['pdf', 'excel']);
             $table->string('file_path');
             $table->timestamps();
         });

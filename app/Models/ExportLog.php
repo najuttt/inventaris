@@ -7,13 +7,14 @@ use Illuminate\Database\Eloquent\Model;
 class ExportLog extends Model
 {
     protected $fillable = [
-        'admin_id',
+        'super_admin_id',
         'type',
+        'format',
         'file_path',
     ];
 
-    public function admin()
+    public function super_admin()
     {
-        return $this->belongsTo(User::class, 'admin_id');
+        return $this->belongsTo(User::class, 'super_admin_id');
     }
 }

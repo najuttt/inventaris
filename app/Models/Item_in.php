@@ -29,6 +29,11 @@ class Item_in extends Model
         return 'expired';
     }
 
+    public function getTotalValueRupiahAttribute()
+    {
+        return 'Rp ' . number_format($this->quantity * $this->item->price, 0, ',', '.');
+    }
+
     public function item()
     {
         return $this->belongsTo(Item::class);

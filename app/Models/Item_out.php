@@ -21,6 +21,11 @@ class Item_out extends Model
         return $this->belongsTo(Item::class);
     }
 
+    public function getTotalValueRupiahAttribute()
+    {
+        return 'Rp ' . number_format($this->quantity * $this->item->price, 0, ',', '.');
+    }
+
     public function cart()
     {
         return $this->belongsTo(Cart::class);

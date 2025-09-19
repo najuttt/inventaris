@@ -151,6 +151,8 @@
                         <div class="d-flex justify-content-between align-items-center flex-wrap mb-4">
                           <h5 class="m-0 me-2">History Barang Masuk</h5>
                           <a class="fw-medium" href="{{ route('super_admin.item_ins.index') }}">View all</a>
+                          <a href="{{ route('super_admin.export.barang_masuk.excel') }}" class="btn btn-success btn-sm">Excel</a>
+                          <a href="{{ route('super_admin.export.barang_masuk.pdf') }}" class="btn btn-danger btn-sm">PDF</a>
                         </div>
                         <div class="deposit-content pt-2">
                           <ul class="p-0 m-0">
@@ -188,6 +190,8 @@
                         <div class="d-flex justify-content-between align-items-center flex-wrap mb-4">
                           <h5 class="m-0 me-2">History Barang Keluar</h5>
                           <a class="fw-medium" href="">View all</a>
+                          <a href="{{ route('super_admin.export.barang_keluar.excel') }}" class="btn btn-success btn-sm">Excel</a>
+                          <a href="{{ route('super_admin.export.barang_keluar.pdf') }}" class="btn btn-danger btn-sm">PDF</a>
                         </div>
                         <div class="withdraw-content pt-2">
                           <ul class="p-0 m-0">

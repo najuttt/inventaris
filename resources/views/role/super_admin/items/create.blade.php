@@ -65,7 +65,7 @@
               <input type="number" name="stock" class="form-control" placeholder="Isi stock" required>
               @error('stock') <small class="text-danger">{{ $message }}</small> @enderror
             </div>
-          </div>zz
+          </div>
 
           <div class="form-group mb-4">
               <label for="image">Gambar</label>

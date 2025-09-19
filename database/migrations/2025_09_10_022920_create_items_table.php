@@ -14,6 +14,7 @@ return new class extends Migration
             $table->string('code')->unique();
             $table->foreignId('category_id')->constrained()->onDelete('cascade');
             $table->integer('stock')->default(0)->nullable();
+            $table->decimal('price', 15, 2)->default(0);
             $table->date('expired_at')->nullable();
             $table->unsignedBigInteger('supplier_id')->nullable();
             $table->unsignedBigInteger('unit_id')->nullable();

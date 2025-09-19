@@ -43,6 +43,6 @@ class User extends Authenticatable
 
     public function exportLogs()
     {
-        return $this->hasMany(ExportLog::class, 'admin_id');
+        return $this->hasMany(ExportLog::class, 'super_admin_id');
     }
 }

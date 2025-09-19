@@ -12,6 +12,7 @@ class Item extends Model
         'code',
         'category_id',
         'stock',
+        'price',
         'unit_id',
         'supplier_id',
         'expired_at',
@@ -28,6 +29,12 @@ class Item extends Model
     {
         return $this->itemIn->where('expired_at', '>=', now())->sum('quantity');
     }
+
+    public function getPriceRupiahAttribute()
+    {
+        return 'Rp ' . number_format($this->price, 0, ',', '.');
+    }
+
 
     protected $casts = [
         'expired_at' => 'datetime',

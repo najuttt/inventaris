@@ -11,6 +11,7 @@ use App\Http\Controllers\Item_inController;
 use App\Http\Controllers\UnitController;
 use App\Http\Controllers\SupplierController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\ExportController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -21,6 +22,7 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
+
 
 Route::middleware(['auth', 'role:super_admin'])
     ->prefix('super-admin')
@@ -36,10 +38,24 @@ Route::middleware(['auth', 'role:super_admin'])
         Route::resource('suppliers', SupplierController::class);
         Route::resource('users', UserController::class);
 
-        //Barcode
+        // Barcode
         Route::get('items/{item}/barcode-pdf', [ItemController::class, 'printBarcode'])
             ->name('items.barcode.pdf');
+
+        //  Export Laporan
+        // Barang Masuk
+        Route::get('/export/barang-masuk/excel', [ExportController::class, 'exportBarangMasukExcel'])
+            ->name('export.barang_masuk.excel');
+        Route::get('/export/barang-masuk/pdf', [ExportController::class, 'exportBarangMasukPdf'])
+            ->name('export.barang_masuk.pdf');
+
+        // Barang Keluar
+        Route::get('/export/barang-keluar/excel', [ExportController::class, 'exportBarangKeluarExcel'])
+            ->name('export.barang_keluar.excel');
+        Route::get('/export/barang-keluar/pdf', [ExportController::class, 'exportBarangKeluarPdf'])
+            ->name('export.barang_keluar.pdf');
     });
+
 
 Route::middleware(['auth', 'role:admin'])
     ->prefix('admin')
@@ -47,6 +63,7 @@ Route::middleware(['auth', 'role:admin'])
     ->group(function () {
         Route::get('/dashboard', [AdminController::class, 'index'])->name('dashboard');
     });
+
 
 Route::middleware(['auth', 'role:pegawai'])
     ->prefix('pegawai')
