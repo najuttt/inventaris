@@ -12,7 +12,7 @@
             <thead>
                 <tr>
                     <th>Barang</th>
-                    <th>Qty</th>
+                    <th>Jumlah</th>
                     <th>Supplier</th>
                     <th>Expired</th>
                     <th>Status</th>

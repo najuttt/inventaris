@@ -34,14 +34,13 @@ class ItemController extends Controller
             'category_id' => 'required|exists:categories,id',
             'unit_id'     => 'required|exists:units,id',
             'supplier_id' => 'required|exists:suppliers,id',
-            'stock'       => 'required|integer|min:0',
+            'price'       => 'required|numeric|min:0',
             'expired_at'  => 'nullable|date',
             'image'       => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
         ]);
 
         $validated['created_by'] = Auth::id();
 
-        // Simpan gambar jika ada
         if ($request->hasFile('image')) {
             $validated['image'] = $request->file('image')->store('images/items', 'public');
         }
@@ -54,7 +53,6 @@ class ItemController extends Controller
     public function show(Request $request, Item $item)
     {
         $supplierId = $request->get('supplier_id');
-
         $itemInQuery = $item->itemIn();
 
         if ($supplierId) {
@@ -62,7 +60,6 @@ class ItemController extends Controller
         }
 
         $itemIns = $itemInQuery->get();
-
         $expiredCount = $itemIns->where('expired_at', '<', now())->sum('quantity');
         $nonExpiredCount = $itemIns->where('expired_at', '>=', now())->sum('quantity');
 
@@ -92,17 +89,15 @@ class ItemController extends Controller
             'category_id' => 'required|exists:categories,id',
             'unit_id'     => 'required|exists:units,id',
             'supplier_id' => 'required|exists:suppliers,id',
-            'stock'       => 'required|integer|min:0',
+            'price'       => 'required|numeric|min:0',
             'expired_at'  => 'nullable|date',
             'image'       => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
         ]);
 
-        // Hapus gambar lama jika diganti
         if ($request->hasFile('image')) {
             if ($item->image && Storage::disk('public')->exists($item->image)) {
                 Storage::disk('public')->delete($item->image);
             }
-
             $validated['image'] = $request->file('image')->store('images/items', 'public');
         }
 
@@ -113,7 +108,6 @@ class ItemController extends Controller
 
     public function destroy(Item $item)
     {
-        // Hapus gambar jika ada
         if ($item->image && Storage::disk('public')->exists($item->image)) {
             Storage::disk('public')->delete($item->image);
         }

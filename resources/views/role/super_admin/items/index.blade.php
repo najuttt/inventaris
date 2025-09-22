@@ -14,6 +14,7 @@
                     <th>Nama</th>
                     <th>Kategori</th>
                     <th>Satuan Barang</th>
+                    <th>Harga</th>
                     <th>Stok</th>
                     <th>Aksi</th>
                 </tr>
@@ -24,6 +25,7 @@
                     <td>{{ $item->name }}</td>
                     <td>{{ $item->category->name ?? '-' }}</td>
                     <td>{{ $item->unit->name ?? '-' }}</td>
+                    <td>Rp {{ number_format($item->price, 0, ',', '.') }}</td>
                     <td>{{ $item->stock }}</td>
                     <td>
                         <div class="dropdown">

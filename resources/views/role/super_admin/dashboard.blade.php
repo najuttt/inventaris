@@ -2,7 +2,7 @@
 @section('content')
 <div class="row gy-6">
                 <!-- Weekly Overview Chart -->
-                <div class="col-xl-12 col-md-6">
+                <div class="col-xl-8 col-md-6">
                   <div class="card">
                     <div class="card-header">
                       <div class="d-flex justify-content-between">
@@ -55,7 +55,7 @@
                           </div>
                         </div>
                         <div class="card-body">
-                          <h6 class="mb-1">Categories</h6>
+                          <h6 class="mb-1">Kategori</h6>
                           <div class="d-flex flex-wrap mb-1 align-items-center">
                             <h4 class="mb-0 me-2">{{ $categories }}</h4>
                             <p class="{{ $categories >= 0 ? 'text-success' : 'text-danger' }} mb-0">
@@ -103,7 +103,7 @@
                           </div>
                         </div>
                         <div class="card-body">
-                          <h6 class="mb-1">Suppliers</h6>
+                          <h6 class="mb-1">Supplier</h6>
                           <div class="d-flex flex-wrap mb-1 align-items-center">
                             <h4 class="mb-0 me-2">{{ $suppliers }}</h4>
                             <p class="{{ $suppliers >= 0 ? 'text-success' : 'text-danger' }} mb-0">
@@ -127,7 +127,7 @@
                           </div>
                         </div>
                         <div class="card-body">
-                          <h6 class="mb-1">Users</h6>
+                          <h6 class="mb-1">User</h6>
                           <div class="d-flex flex-wrap mb-1 align-items-center">
                             <h4 class="mb-0 me-2">{{ $users }}</h4>
                             <p class="{{ $users >= 0 ? 'text-success' : 'text-danger' }} mb-0">
@@ -142,36 +142,27 @@
                   </div>
                 </div>
                 <!--/ four cards -->
-                <!-- Barang Masuk / Barang Keluar -->
-                <div class="col-xl-8">
+
+                <!-- Barang Masuk / Barang Keluar / Expired -->
+                <div class="col-xl-12">
                   <div class="card-group">
+
                     {{-- Barang Masuk --}}
                     <div class="card mb-0">
                       <div class="card-body card-separator">
                         <div class="d-flex justify-content-between align-items-center flex-wrap mb-4">
                           <h5 class="m-0 me-2">History Barang Masuk</h5>
                           <a class="fw-medium" href="{{ route('super_admin.item_ins.index') }}">View all</a>
-                          <a href="{{ route('super_admin.export.barang_masuk.excel') }}" class="btn btn-success btn-sm">Excel</a>
-                          <a href="{{ route('super_admin.export.barang_masuk.pdf') }}" class="btn btn-danger btn-sm">PDF</a>
                         </div>
                         <div class="deposit-content pt-2">
                           <ul class="p-0 m-0">
                             @forelse($itemIns as $item)
                               <li class="d-flex mb-4 align-items-center pb-2">
-                                <div class="flex-shrink-0 me-4">
-                                  <img
-                                    src="{{ asset('assets/img/icons/payments/stripes.png') }}"
-                                    class="img-fluid"
-                                    alt="barang"
-                                    height="30"
-                                    width="30" />
-                                </div>
                                 <div class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
                                   <div class="me-2">
                                     <h6 class="mb-0">{{ $item->item->name }}</h6>
                                     <p class="mb-0">Jumlah: {{ $item->quantity }}</p>
                                   </div>
-                                  <h6 class="text-success mb-0">+{{ $item->quantity }}</h6>
                                 </div>
                               </li>
                             @empty
@@ -190,38 +181,156 @@
                         <div class="d-flex justify-content-between align-items-center flex-wrap mb-4">
                           <h5 class="m-0 me-2">History Barang Keluar</h5>
                           <a class="fw-medium" href="">View all</a>
-                          <a href="{{ route('super_admin.export.barang_keluar.excel') }}" class="btn btn-success btn-sm">Excel</a>
-                          <a href="{{ route('super_admin.export.barang_keluar.pdf') }}" class="btn btn-danger btn-sm">PDF</a>
                         </div>
                         <div class="withdraw-content pt-2">
                           <ul class="p-0 m-0">
+                            {{-- @forelse($itemOuts as $item)
                               <li class="d-flex mb-4 align-items-center pb-2">
-                                <div class="flex-shrink-0 me-4">
-                                  <img
-                                    src="{{ asset('assets/img/icons/payments/digital-ocean.png') }}"
-                                    class="img-fluid"
-                                    alt="barang"
-                                    height="30"
-                                    width="30" />
-                                </div>
                                 <div class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
                                   <div class="me-2">
-                                    <h6 class="mb-0"></h6>
-                                    <p class="mb-0">Jumlah:</p>
+                                    <h6 class="mb-0">{{ $item->item->name }}</h6>
+                                    <p class="mb-0">Jumlah: {{ $item->quantity }}</p>
                                   </div>
-                                  <h6 class="text-danger mb-0">-</h6>
+                                  <h6 class="text-danger mb-0">-{{ $item->quantity }}</h6>
                                 </div>
                               </li>
+                            @empty
                               <li class="d-flex align-items-center">
                                 <p class="mb-0 text-muted">Belum ada data barang keluar</p>
                               </li>
+                            @endforelse --}}
                           </ul>
                         </div>
                       </div>
                     </div>
+
+                    {{-- Barang Mau Expired --}}
+                    <div class="card mb-0">
+                      <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center flex-wrap mb-4">
+                          <h5 class="m-0 me-2">Barang Hampir Expired</h5>
+                          <a class="fw-medium" href="{{ route('super_admin.item_ins.index') }}">View all</a>
+                        </div>
+                        <div class="expired-content pt-2">
+                          <ul class="p-0 m-0">
+                            @forelse($expiredSoon as $item)
+                              <li class="d-flex mb-4 align-items-center pb-2 border-bottom">
+                                <div class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
+                                  <div class="me-2">
+                                    <h6 class="mb-0">{{ $item->item->name }}</h6>
+                                    <p class="mb-0">
+                                      Jumlah: <strong>{{ $item->quantity }}</strong> <br>
+                                      Expired: 
+                                      <span class="badge bg-warning text-dark px-2 py-1">
+                                        {{ $item->expired_at->format('d M Y') }}
+                                      </span>
+                                      @php
+                                          $days = now()->startOfDay()->diffInDays($item->expired_at->startOfDay(), false);
+                                      @endphp
+
+                                      @if($days < 0)
+                                          <span class="badge bg-danger">
+                                              Sudah expired {{ abs($days) }} hari lalu
+                                          </span>
+                                      @else($days <= 30)
+                                          <span class="badge bg-warning text-dark">
+                                              Hampir expired ({{ $days }} hari lagi)
+                                          </span>
+                                      @endif
+                                    </p>
+                                  </div>
+                                </div>
+                              </li>
+                            @empty
+                              <li class="d-flex align-items-center">
+                                <p class="mb-0 text-muted">Tidak ada barang yang hampir expired</p>
+                              </li>
+                            @endforelse
+                          </ul>
+                        </div>
+                      </div>
+                    </div>
+
                   </div>
                 </div>
-                <!-- Barang Masuk / Barang Keluar -->
+                <!-- /Barang Masuk / Barang Keluar / Expired -->
+
+                {{-- Export --}}
+                <!-- resources/views/export/index.blade.php -->
+                <div class="card shadow p-4">
+                    <h5 class="mb-3">Export Data</h5>
+                    <form id="exportForm" method="GET" action="">
+                        <div class="row g-3">
+                            <!-- Jenis Data -->
+                            <div class="col-md-4">
+                                <label class="form-label">Jenis Data</label>
+                                <select class="form-select" name="type" id="type" required>
+                                    <option value="" disabled selected>Pilih Jenis</option>
+                                    <option value="barang_masuk">Barang Masuk</option>
+                                    <option value="barang_keluar">Barang Keluar</option>
+                                </select>
+                            </div>
+
+                            <!-- Periode -->
+                            <div class="col-md-4">
+                                <label class="form-label">Periode</label>
+                                <select class="form-select" name="period" id="period" required>
+                                    <option value="" disabled selected>Pilih Periode</option>
+                                    <option value="weekly">Minggu</option>
+                                    <option value="monthly">Bulan</option>
+                                    <option value="yearly">Tahun</option>
+                                </select>
+                            </div>
+
+                            <!-- Format -->
+                            <div class="col-md-4">
+                                <label class="form-label">Format</label>
+                                <select class="form-select" name="format" id="format" required>
+                                    <option value="" disabled selected>Pilih Format</option>
+                                    <option value="pdf">PDF</option>
+                                    <option value="excel">Excel</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="mt-4 text-end">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="bi bi-download"></i> Export
+                            </button>
+                        </div>
+                    </form>
+                </div>
+
+                <script>
+                    document.getElementById('exportForm').addEventListener('submit', function(e) {
+                        e.preventDefault();
+
+                        let type = document.getElementById('type').value;
+                        let period = document.getElementById('period').value;
+                        let format = document.getElementById('format').value;
+
+                        if (!type || !period || !format) {
+                            alert("Silakan pilih semua opsi!");
+                            return;
+                        }
+
+                        let route = "";
+
+                        if (type === "barang_masuk" && format === "pdf") {
+                            route = "{{ route('super_admin.export.barang_masuk.pdf') }}";
+                        } else if (type === "barang_masuk" && format === "excel") {
+                            route = "{{ route('super_admin.export.barang_masuk.excel') }}";
+                        } else if (type === "barang_keluar" && format === "pdf") {
+                            route = "{{ route('super_admin.export.barang_keluar.pdf') }}";
+                        } else if (type === "barang_keluar" && format === "excel") {
+                            route = "{{ route('super_admin.export.barang_keluar.excel') }}";
+                        }
+
+                        // Tambahkan query ?period=
+                        window.location.href = route + "?period=" + period;
+                    });
+                </script>
+                {{-- End Export --}}
 
                 <!-- Data Tables -->
                 <div class="col-12">

@@ -59,12 +59,10 @@
             </div>
           </div>
 
-          <div class="row mb-4">
-            <label class="col-sm-2 col-form-label">Stock</label>
-            <div class="col-sm-10">
-              <input type="number" name="stock" class="form-control" placeholder="Isi stock" required>
-              @error('stock') <small class="text-danger">{{ $message }}</small> @enderror
-            </div>
+          <div class="mb-3">
+              <label for="price" class="form-label">Harga</label>
+              <input type="number" name="price" id="price" class="form-control"
+                    value="{{ old('price') }}" step="0.01" required>
           </div>
 
           <div class="form-group mb-4">

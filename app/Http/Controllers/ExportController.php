@@ -2,71 +2,144 @@
 
 namespace App\Http\Controllers;
 
-use App\Exports\BarangMasukExport;
-use App\Exports\BarangKeluarExport;
-use App\Models\ExportLog;
 use App\Models\Item_in;
 use App\Models\Item_out;
+use App\Models\ExportLog;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Maatwebsite\Excel\Facades\Excel;
 use Barryvdh\DomPDF\Facade\Pdf;
 
 class ExportController extends Controller
 {
-    // Barang Masuk - Excel
-    public function exportBarangMasukExcel()
+    /**
+     * Filter data berdasarkan period (weekly, monthly, yearly)
+     */
+    private function filterByPeriod($query, $period)
     {
-        $fileName = 'barang_masuk_' . now()->format('Ymd_His') . '.xlsx';
-        ExportLog::create([
-            'super_admin_id' => Auth::id(),
-            'type' => 'excel',
-            'file_path' => 'exports/' . $fileName,
-        ]);
-        return Excel::download(new BarangMasukExport, $fileName);
+        if ($period === 'weekly') {
+            return $query->whereBetween('created_at', [
+                now()->startOfWeek(),
+                now()->endOfWeek()
+            ]);
+        } elseif ($period === 'monthly') {
+            return $query->whereYear('created_at', now()->year)
+                         ->whereMonth('created_at', now()->month);
+        } elseif ($period === 'yearly') {
+            return $query->whereYear('created_at', now()->year);
+        }
+
+        return $query; // default semua data
     }
 
-    // Barang Masuk - PDF
-    public function exportBarangMasukPdf()
+    /**
+     * Export Barang Masuk Excel
+     */
+    public function exportBarangMasukExcel(Request $request)
     {
-        $items = Item_in::with('item')->get();
-        $fileName = 'barang_masuk_' . now()->format('Ymd_His') . '.pdf';
+        $period = $request->query('period', 'weekly');
+        $fileName = "barang_masuk_{$period}_" . now()->format('Ymd_His') . '.xlsx';
 
-        $pdf = Pdf::loadView('exports.barang_masuk_pdf', compact('items'))
+        $query = Item_in::with('item');
+        $items = $this->filterByPeriod($query, $period)->get();
+
+        // Hitung total_price
+        $items->map(function ($itemIn) {
+            $itemIn->total_price = $itemIn->item->price * $itemIn->quantity;
+            return $itemIn;
+        });
+
+        ExportLog::create([
+            'super_admin_id' => Auth::id(),
+            'type'   => $period,
+            'format' => 'excel',
+            'file_path' => 'exports/' . $fileName,
+        ]);
+
+        return Excel::download(new \App\Exports\BarangMasukExport($items), $fileName);
+    }
+
+    /**
+     * Export Barang Masuk PDF
+     */
+    public function exportBarangMasukPdf(Request $request)
+    {
+        $period = $request->query('period', 'weekly');
+        $fileName = "barang_masuk_{$period}_" . now()->format('Ymd_His') . '.pdf';
+
+        $query = Item_in::with('item');
+        $items = $this->filterByPeriod($query, $period)->get();
+
+        // Hitung total_price
+        $items->map(function ($itemIn) {
+            $itemIn->total_price = $itemIn->item->price * $itemIn->quantity;
+            return $itemIn;
+        });
+
+        $pdf = Pdf::loadView('export.barang_masuk_pdf', compact('items', 'period'))
                   ->setPaper('a4', 'landscape');
 
         ExportLog::create([
             'super_admin_id' => Auth::id(),
-            'type' => 'pdf',
+            'type'   => $period,
+            'format' => 'pdf',
             'file_path' => 'exports/' . $fileName,
         ]);
 
         return $pdf->download($fileName);
     }
 
-    // Barang Keluar - Excel
-    public function exportBarangKeluarExcel()
+    /**
+     * Export Barang Keluar Excel
+     */
+    public function exportBarangKeluarExcel(Request $request)
     {
-        $fileName = 'barang_keluar_' . now()->format('Ymd_His') . '.xlsx';
+        $period = $request->query('period', 'weekly');
+        $fileName = "barang_keluar_{$period}_" . now()->format('Ymd_His') . '.xlsx';
+
+        $query = Item_out::with('item');
+        $items = $this->filterByPeriod($query, $period)->get();
+
+        // Hitung total_price
+        $items->map(function ($itemOut) {
+            $itemOut->total_price = $itemOut->item->price * $itemOut->quantity;
+            return $itemOut;
+        });
+
         ExportLog::create([
             'super_admin_id' => Auth::id(),
-            'type' => 'excel',
+            'type'   => $period,
+            'format' => 'excel',
             'file_path' => 'exports/' . $fileName,
         ]);
-        return Excel::download(new BarangKeluarExport, $fileName);
+
+        return Excel::download(new \App\Exports\BarangKeluarExport($items), $fileName);
     }
 
-    // Barang Keluar - PDF
-    public function exportBarangKeluarPdf()
+    /**
+     * Export Barang Keluar PDF
+     */
+    public function exportBarangKeluarPdf(Request $request)
     {
-        $items = Item_out::with('item')->get();
-        $fileName = 'barang_keluar_' . now()->format('Ymd_His') . '.pdf';
+        $period = $request->query('period', 'weekly');
+        $fileName = "barang_keluar_{$period}_" . now()->format('Ymd_His') . '.pdf';
 
-        $pdf = Pdf::loadView('exports.barang_keluar_pdf', compact('items'))
+        $query = Item_out::with('item');
+        $items = $this->filterByPeriod($query, $period)->get();
+
+        // Hitung total_price
+        $items->map(function ($itemOut) {
+            $itemOut->total_price = $itemOut->item->price * $itemOut->quantity;
+            return $itemOut;
+        });
+
+        $pdf = Pdf::loadView('export.barang_keluar_pdf', compact('items', 'period'))
                   ->setPaper('a4', 'landscape');
 
         ExportLog::create([
             'super_admin_id' => Auth::id(),
-            'type' => 'pdf',
+            'type'   => $period,
+            'format' => 'pdf',
             'file_path' => 'exports/' . $fileName,
         ]);
 

@@ -10,6 +10,7 @@ use App\Models\Supplier;
 use App\Models\User;
 use App\Models\Item_in;
 use App\Models\Item_out;
+use Carbon\Carbon;
 
 class SuperAdminController extends Controller
 {
@@ -18,18 +19,21 @@ class SuperAdminController extends Controller
      */
     public function index()
     {
-        $categories = Category::count();
-        $item      = Item::count();
-        $suppliers  = Supplier::count();
-        $users      = User::count();
+        $itemIns = Item_in::with('item')->latest()->take(5)->get();
 
-        // Ambil history terbaru barang masuk (limit 5)
-        $itemIns = Item_in::with('item')
-            ->latest()
-            ->take(5)
+        $expiredSoon = Item_in::whereNotNull('expired_at')
+            ->whereBetween('expired_at', [Carbon::now(), Carbon::now()->addDays(30)])
+            ->with('item')
             ->get();
 
-        return view('role.super_admin.dashboard', compact('categories', 'item', 'suppliers', 'users', 'itemIns'));
+        return view('role.super_admin.dashboard', [
+            'categories' => Category::count(),
+            'item' => Item::count(),
+            'suppliers' => Supplier::count(),
+            'users' => User::count(),
+            'itemIns' => $itemIns,
+            'expiredSoon' => $expiredSoon,
+        ]);
     }
 
     /**

@@ -5,7 +5,7 @@
   <div class="col-xxl">
     <div class="card">
       <div class="card-header d-flex align-items-center justify-content-between">
-        <h5 class="mb-0">Tambah Item Masuk</h5>
+        <h5 class="mb-0">Tambah Barang Masuk</h5>
         <small class="text-body-secondary">Form input item masuk baru</small>
       </div>
       <div class="card-body">
@@ -39,19 +39,29 @@
           </div>
 
           <div class="row mb-4">
-            <label class="col-sm-2 col-form-label">Quantity</label>
+            <label class="col-sm-2 col-form-label">Jumlah</label>
             <div class="col-sm-10">
               <input type="number" name="quantity" class="form-control" placeholder="Isi jumlah" required>
               @error('quantity') <small class="text-danger">{{ $message }}</small> @enderror
             </div>
           </div>
 
-          <div class="row mb-4">
-            <label class="col-sm-2 col-form-label">Expired At</label>
-            <div class="col-sm-10">
-              <input type="date" name="expired_at" class="form-control">
-              @error('expired_at') <small class="text-danger">{{ $message }}</small> @enderror
-            </div>
+         <div class="row mb-3 align-items-center">
+              <label for="expired_at" class="col-sm-2 col-form-label text-muted fw-semibold">Tanggal Kedaluwarsa</label>
+              <div class="col-sm-10">
+                  <input 
+                      type="date" 
+                      name="expired_at" 
+                      id="expired_at"
+                      min="{{ \Carbon\Carbon::today()->toDateString() }}"
+                      value="{{ old('expired_at', isset($item_in) && $item_in->expired_at ? \Carbon\Carbon::parse($item_in->expired_at)->format('Y-m-d') : '') }}"
+                      class="form-control @error('expired_at') is-invalid @enderror"
+                      required
+                  >
+                  @error('expired_at')
+                      <div class="text-danger small mt-1">{{ $message }}</div>
+                  @enderror
+              </div>
           </div>
 
           <div class="row justify-content-end">
