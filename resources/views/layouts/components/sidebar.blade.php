@@ -32,6 +32,18 @@
                 <div data-i18n="Analytics">Dashboard</div>
               </a>
             </li>
+            <li class="menu-item {{ Route::is('pegawai.produk') ? 'active' : '' }}">
+              <a href="{{route('pegawai.produk')}}" class="menu-link">
+                <i class="menu-icon icon-base ri ri-shopping-cart-line"></i>
+                <div data-i18n="Basic">Produk</div>
+              </a>
+            </li>
+            <li class="menu-item {{ Route::is('pegawai.permintaan.pending') ? 'active' : '' }}">
+                <a href="{{ route('pegawai.permintaan.pending') }}" class="menu-link">
+                    <i class="menu-icon icon-base ri ri-time-line"></i>
+                    <div data-i18n="Basic">Permintaan Pending</div>
+                </a>
+            </li>
             @endif
             <!-- Super Admin -->
             @if (auth()->user()->role === 'super_admin')
@@ -100,30 +112,6 @@
               </a>
             </li>
             <!-- Cards -->
-            <li class="menu-item">
-              <a href="cards-basic.html" class="menu-link">
-                <i class="menu-icon icon-base ri ri-bank-card-2-line"></i>
-                <div data-i18n="Basic">Cards</div>
-              </a>
-            </li>
-            @endif
-            @if (auth()->user()->role === 'pegawai')
-            <!-- Tamu -->
-            <li class="menu-header mt-7"><span class="menu-header-text">Tamu</span></li>
-            <!-- Cards -->
-            <li class="menu-item">
-              <a href="cards-basic.html" class="menu-link">
-                <i class="menu-icon icon-base ri ri-bank-card-2-line"></i>
-                <div data-i18n="Basic">Cards</div>
-              </a>
-            </li>
-            <!-- Cards -->
-            <li class="menu-item">
-              <a href="cards-basic.html" class="menu-link">
-                <i class="menu-icon icon-base ri ri-bank-card-2-line"></i>
-                <div data-i18n="Basic">Cards</div>
-              </a>
-            </li><!-- Cards -->
             <li class="menu-item">
               <a href="cards-basic.html" class="menu-link">
                 <i class="menu-icon icon-base ri ri-bank-card-2-line"></i>

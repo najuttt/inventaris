@@ -15,6 +15,10 @@ class PegawaiController extends Controller
         return view('role.pegawai.dashboard');
     }
 
+    public function produk()
+    {
+        return view('role.pegawai.produk');
+    }
     /**
      * Show the form for creating a new resource.
      */

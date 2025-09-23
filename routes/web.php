@@ -12,6 +12,8 @@ use App\Http\Controllers\UnitController;
 use App\Http\Controllers\SupplierController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\ExportController;
+use App\Http\Controllers\PermintaanController;
+use App\Http\Controllers\CartController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -69,7 +71,22 @@ Route::middleware(['auth', 'role:pegawai'])
     ->prefix('pegawai')
     ->as('pegawai.')
     ->group(function () {
+        Route::resource('cart', CartController::class);
         Route::get('/dashboard', [PegawaiController::class, 'index'])->name('dashboard');
+
+        Route::get('/produk', [PermintaanController::class, 'index'])->name('produk');
+
+        Route::post('/permintaan/create', [PermintaanController::class, 'createPermintaan'])->name('permintaan.create');
+
+        Route::get('/permintaan', [PermintaanController::class, 'permintaan'])->name('permintaan.index');
+
+        Route::get('/permintaan/pending', [PermintaanController::class, 'pendingPermintaan'])->name('permintaan.pending');
+
+        Route::get('/permintaan/{id}', [PermintaanController::class, 'detailPermintaan'])->name('permintaan.detail');
+
+        Route::post('/permintaan/{id}/submit', [PermintaanController::class, 'submitPermintaan'])->name('permintaan.submit');
+
     });
+
 
 require __DIR__.'/auth.php';

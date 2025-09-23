@@ -46,19 +46,6 @@
             </div>
           </div>
 
-          <div class="row mb-4">
-            <label class="col-sm-2 col-form-label">Supplier</label>
-            <div class="col-sm-10">
-              <select name="supplier_id" class="form-control" required>
-                <option value="">-- Pilih Supplier --</option>
-                @foreach($suppliers as $sup)
-                  <option value="{{ $sup->id }}">{{ $sup->name }}</option>
-                @endforeach
-              </select>
-              @error('supplier_id') <small class="text-danger">{{ $message }}</small> @enderror
-            </div>
-          </div>
-
           <div class="mb-3">
               <label for="price" class="form-label">Harga</label>
               <input type="number" name="price" id="price" class="form-control"

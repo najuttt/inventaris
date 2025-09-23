@@ -10,9 +10,8 @@ return new class extends Migration
     {
         Schema::create('carts', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->nullable()->constrained('users')->onDelete('cascade');
-            $table->foreignId('guest_id')->nullable()->constrained('guests')->onDelete('cascade');
-            $table->enum('status', ['pending', 'approved', 'rejected'])->default('pending');
+            $table->foreignId('user_id')->constrained()->onDelete('cascade');
+            $table->enum('status', ['active', 'pending', 'approved', 'rejected'])->default('active');
             $table->timestamps();
         });
     }
