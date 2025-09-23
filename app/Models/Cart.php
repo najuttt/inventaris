@@ -22,13 +22,18 @@ class Cart extends Model
         return $this->belongsTo(Guest::class);
     }
 
-    public function cartItems()
+    public function item()
     {
-        return $this->hasMany(CartItem::class);
+        return $this->belongsTo(Item::class, 'item_id');
     }
 
     public function itemOut()
     {
         return $this->hasMany(Item_out::class);
+    }
+
+    public function cartItems()
+    {
+        return $this->hasMany(CartItem::class, 'cart_id', 'id');
     }
 }

@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Role;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use App\Models\Notification;
 
 class PegawaiController extends Controller
 {
@@ -12,7 +14,14 @@ class PegawaiController extends Controller
      */
     public function index()
     {
-        return view('role.pegawai.dashboard');
+        $userId = Auth::id();
+
+        // Ambil hanya notifikasi milik user yang login
+        $notifications = Notification::where('user_id', $userId)
+                            ->orderBy('created_at', 'desc')
+                            ->get();
+                            
+        return view('role.pegawai.dashboard', compact('notifications'));
     }
 
     /**

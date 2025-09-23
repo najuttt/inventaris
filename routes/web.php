@@ -3,7 +3,10 @@
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Role\SuperAdminController;
-use App\Http\Controllers\Role\AdminController;
+use App\Http\Controllers\Role\admin\AdminController;
+use App\Http\Controllers\Role\admin\ItemoutController;
+use App\Http\Controllers\Role\admin\RequestController;
+use App\Http\Controllers\Role\admin\GuestController;
 use App\Http\Controllers\Role\PegawaiController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ItemController;
@@ -62,6 +65,20 @@ Route::middleware(['auth', 'role:admin'])
     ->as('admin.')
     ->group(function () {
         Route::get('/dashboard', [AdminController::class, 'index'])->name('dashboard');
+        Route::get('/dashboard/data', [AdminController::class, 'getChartData']);
+
+        Route::get('/itemout', [ItemoutController::class, 'index'])->name('itemout');
+        Route::post('/itemout/scan/{cartItem}', [ItemoutController::class, 'scan'])->name('itemout.scan');
+        Route::post('/admin/itemout/scan/{id}', [ItemoutController::class, 'scan'])->name('admin.itemout.scan');
+        Route::get('/itemout/{cart}/struk', [ItemoutController::class, 'struk'])->name('admin.itemout.struk');
+        Route::get('/admin/itemout/struk/{id}', [ItemoutController::class, 'generateStruk'])->name('admin.itemout.struk');
+        Route::get('/itemout/struk/{id}', [ItemoutController::class, 'generateStruk'])->name('itemout.struk');
+        Route::get('/admin/itemout/receipt/{id}', [ItemoutController::class, 'receipt'])->name('admin.itemout.receipt');
+
+        Route::get('/request', [RequestController::class, 'index'])->name('request');
+        Route::resource('carts', RequestController::class);
+
+        Route::resource('guests', GuestController::class);
     });
 
 
