@@ -13,6 +13,7 @@ use Barryvdh\DomPDF\Facade\Pdf;
 
 class ItemController extends Controller
 {
+
     public function index()
     {
         $items = Item::with(['category', 'unit', 'supplier'])->latest()->get();
@@ -33,17 +34,19 @@ class ItemController extends Controller
             'name'        => 'required|string|max:255',
             'category_id' => 'required|exists:categories,id',
             'unit_id'     => 'required|exists:units,id',
-            'supplier_id' => 'required|exists:suppliers,id',
             'price'       => 'required|numeric|min:0',
-            'expired_at'  => 'nullable|date',
             'image'       => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
         ]);
 
+        // isi created_by dari user login
         $validated['created_by'] = Auth::id();
 
+        // Simpan gambar jika ada
         if ($request->hasFile('image')) {
             $validated['image'] = $request->file('image')->store('images/items', 'public');
         }
+
+        $validated['stock'] = 0;
 
         Item::create($validated);
 
@@ -88,12 +91,11 @@ class ItemController extends Controller
             'name'        => 'required|string|max:255',
             'category_id' => 'required|exists:categories,id',
             'unit_id'     => 'required|exists:units,id',
-            'supplier_id' => 'required|exists:suppliers,id',
             'price'       => 'required|numeric|min:0',
-            'expired_at'  => 'nullable|date',
             'image'       => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
         ]);
 
+        // Update gambar jika ada
         if ($request->hasFile('image')) {
             if ($item->image && Storage::disk('public')->exists($item->image)) {
                 Storage::disk('public')->delete($item->image);

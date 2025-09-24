@@ -22,13 +22,23 @@ class Cart extends Model
         return $this->belongsTo(Guest::class);
     }
 
-    public function cartItems()
+    // relasi many-to-many ke Item lewat cart_items
+    public function items()
     {
-        return $this->hasMany(CartItem::class);
+        return $this->belongsToMany(Item::class, 'cart_items', 'cart_id', 'item_id')
+                    ->withPivot('quantity')
+                    ->withTimestamps();
     }
 
-    public function itemOut()
+    // relasi ke tabel pivot langsung
+    public function cartItems()
     {
-        return $this->hasMany(Item_out::class);
+        return $this->hasMany(CartItem::class, 'cart_id');
+    }
+
+    // relasi ke item_outs
+    public function itemOuts()
+    {
+        return $this->hasMany(Item_out::class, 'cart_id');
     }
 }

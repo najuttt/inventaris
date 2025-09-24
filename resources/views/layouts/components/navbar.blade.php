@@ -1,71 +1,67 @@
 @auth
   @if(Auth::user()->role === "pegawai")
     @php
-        $cartsitems = \App\Models\Cart::where('user_id', Auth::id())
-            ->where('status', 'active')
-            ->with('cartItems.item')
-            ->first();
+      $cartsitems = \App\Models\Cart::where('user_id', Auth::id())
+          ->where('status', 'active')
+          ->with('cartItems.item')
+          ->first();
 
-        // misal notifikasi (ini dummy, nanti bisa kamu ganti query sesuai kebutuhan)
-        $notifications = [
-            ['message' => 'Pesanan #123 disetujui'],
-            ['message' => 'Pesanan #124 ditolak'],
-        ];
+      $notifications = \App\Models\Notification::where('user_id', Auth::id())
+          ->where('status', 'unread')
+          ->latest()
+          ->take(5)
+          ->get();
     @endphp
 
     <!-- Offcanvas Cart -->
-    <div class="offcanvas offcanvas-end" data-bs-scroll="true" tabindex="-1" id="offcanvasCart" aria-labelledby="My Cart">
-      <div class="offcanvas-header justify-content-center">
+    <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasCart" aria-labelledby="offcanvasCartLabel">
+      <div class="offcanvas-header justify-content-between">
+        <h5 id="offcanvasCartLabel">Keranjang</h5>
         <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
       </div>
       <div class="offcanvas-body">
-        <div class="order-md-last">
-          <h4 class="d-flex justify-content-between align-items-center mb-3">
-            <span class="text-primary">Keranjang</span>
-            @if($cartsitems)
-              <span class="badge bg-primary rounded-pill">{{ $cartsitems->cartItems->count() }}</span>
-            @else
-              <span class="badge bg-primary rounded-pill">0</span>
-            @endif
-          </h4>
-          <ul class="list-group mb-3">
-            @if($cartsitems)
-              @foreach($cartsitems->cartItems as $item)
-                <li class="list-group-item d-flex justify-content-between lh-sm">
-                  <div>
-                    <h6 class="my-0">{{ $item->item->name }}</h6>
-                    <small class="text-body-secondary">{{ $item->quantity }}x</small>
-                  </div>
-                </li>
-              @endforeach
-            @else
-              <li class="list-group-item text-center py-3">
-                <p class="mb-0">Keranjang Anda kosong</p>
-              </li>
-            @endif
-          </ul>
+        <h4 class="d-flex justify-content-between align-items-center mb-3">
+          <span class="text-primary">Keranjang</span>
+          <span class="badge bg-primary rounded-pill">
+            {{ $cartsitems ? $cartsitems->cartItems->count() : 0 }}
+          </span>
+        </h4>
 
-          @if($cartsitems)
-            <a href="{{ route('pegawai.cart.index') }}" class="w-100 btn btn-primary btn-lg">
-              Lihat Detail Pesanan
-            </a>
+        <ul class="list-group mb-3">
+          @if($cartsitems && $cartsitems->cartItems->count() > 0)
+            @foreach($cartsitems->cartItems as $item)
+              <li class="list-group-item d-flex justify-content-between lh-sm">
+                <div>
+                  <h6 class="my-0">{{ $item->item->name }}</h6>
+                  <small class="text-body-secondary">{{ $item->quantity }}x</small>
+                </div>
+              </li>
+            @endforeach
           @else
-            <a href="{{ route('pegawai.produk') }}" class="w-100 btn btn-outline-primary btn-lg">
-              Lanjutkan Belanja
-            </a>
+            <li class="list-group-item text-center py-3">
+              <p class="mb-0">Keranjang Anda kosong</p>
+            </li>
           @endif
-        </div>
+        </ul>
+
+        @if($cartsitems && $cartsitems->cartItems->count() > 0)
+          <a href="{{ route('pegawai.cart.index') }}" class="w-100 btn btn-primary btn-lg">
+            Lihat Detail Pesanan
+          </a>
+        @else
+          <a href="{{ route('pegawai.produk') }}" class="w-100 btn btn-outline-primary btn-lg">
+            Lanjutkan Belanja
+          </a>
+        @endif
       </div>
     </div>
   @endif
 @endauth
 
-<nav
-  class="layout-navbar container-xxl navbar-detached navbar navbar-expand-xl align-items-center bg-navbar-theme"
-  id="layout-navbar">
-  <div class="layout-menu-toggle navbar-nav align-items-xl-center me-4 me-xl-0 d-xl-none">
-    <a class="nav-item nav-link px-0 me-xl-6" href="javascript:void(0)">
-      <i class="icon-base ri ri-menu-line icon-md"></i>
+<nav class="layout-navbar container-xxl navbar navbar-expand-xl align-items-center bg-navbar-theme" id="layout-navbar">
+  <div class="layout-menu-toggle navbar-nav align-items-xl-center me-4 d-xl-none">
+    <a class="nav-item nav-link px-0" href="javascript:void(0)">
+      <i class="ri ri-menu-line icon-md"></i>
     </a>
   </div>
 
@@ -73,24 +69,18 @@
     <!-- Search -->
     <div class="navbar-nav align-items-center">
       <div class="nav-item d-flex align-items-center">
-        <i class="icon-base ri ri-search-line icon-lg lh-0"></i>
-        <input
-          type="text"
-          class="form-control border-0 shadow-none"
-          placeholder="Search..."
-          aria-label="Search..." />
+        <i class="ri ri-search-line icon-lg lh-0"></i>
+        <input type="text" class="form-control border-0 shadow-none" placeholder="Search..." aria-label="Search..." />
       </div>
     </div>
     <!-- /Search -->
 
-    <ul class="navbar-nav flex-row align-items-center ms-md-auto">
-      
+    <ul class="navbar-nav flex-row align-items-center ms-auto">
       @auth
         @if(Auth::user()->role === "pegawai")
           <!-- Cart Icon -->
-          <li class="nav-item me-3 mt-4">
-            <a class="nav-link position-relative" data-bs-toggle="offcanvas" href="#offcanvasCart" role="button"
-              aria-controls="offcanvasCart">
+          <li class="nav-item me-3">
+            <a class="nav-link position-relative" data-bs-toggle="offcanvas" href="#offcanvasCart" role="button">
               <i class="ri ri-shopping-cart-2-line icon-lg"></i>
               @if($cartsitems && $cartsitems->cartItems->count() > 0)
                 <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
@@ -101,18 +91,18 @@
           </li>
 
           <!-- Notification Icon -->
-          <li class="nav-item me-5 dropdown mt-4">
-            <a class="nav-link position-relative" href="#" id="notifDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+          <li class="nav-item dropdown me-4">
+            <a class="nav-link position-relative" href="#" id="notifDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
               <i class="ri ri-notification-3-line icon-lg"></i>
-              @if(count($notifications) > 0)
+              @if($notifications->count() > 0)
                 <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-                  {{ count($notifications) }}
+                  {{ $notifications->count() }}
                 </span>
               @endif
             </a>
             <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="notifDropdown">
               @forelse($notifications as $notif)
-                <li><a class="dropdown-item" href="#">{{ $notif['message'] }}</a></li>
+                <li><a class="dropdown-item" href="#">{{ $notif->message }}</a></li>
               @empty
                 <li><span class="dropdown-item-text text-muted">Tidak ada notifikasi</span></li>
               @endforelse
@@ -122,13 +112,10 @@
       @endauth
 
       <!-- User -->
-      <li class="nav-item navbar-dropdown dropdown-user dropdown">
-        <a
-          class="nav-link dropdown-toggle hide-arrow p-0"
-          href="javascript:void(0);"
-          data-bs-toggle="dropdown">
+      <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle hide-arrow p-0" href="#" role="button" data-bs-toggle="dropdown">
           <div class="avatar avatar-online">
-            <img src="{{asset('assets/img/avatars/1.png')}}" alt="alt" class="rounded-circle" />
+            <img src="{{ asset('assets/img/avatars/1.png') }}" alt="user-avatar" class="rounded-circle" />
           </div>
         </a>
         <ul class="dropdown-menu dropdown-menu-end">
@@ -137,14 +124,12 @@
               <div class="d-flex">
                 <div class="flex-shrink-0 me-3">
                   <div class="avatar avatar-online">
-                    <img src="{{ asset('assets/img/avatars/1.png') }}" 
-                        alt="alt" 
-                        class="w-px-40 h-auto rounded-circle" />
+                    <img src="{{ asset('assets/img/avatars/1.png') }}" alt="user-avatar" class="w-px-40 h-auto rounded-circle" />
                   </div>
                 </div>
                 <div class="flex-grow-1">
                   <h6 class="mb-0">{{ Auth::user()->name }}</h6>
-                  <small class="text-body-secondary">{{ Auth::user()->email }}</small>
+                  <small class="text-muted">{{ Auth::user()->email }}</small>
                 </div>
               </div>
             </a>

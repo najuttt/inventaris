@@ -9,7 +9,7 @@
         @if(!$cart || $cart->cartItems->isEmpty())
             <div class="text-center text-muted py-4">
                 <i class="ri-information-line me-1"></i>
-                Keranjang kamu kosong 
+                Keranjang kamu kosong
             </div>
         @else
             <table class="table">
@@ -25,8 +25,8 @@
                     <tr>
                         <td>
                             <div class="d-flex align-items-center">
-                                <img src="{{ asset('storage/' . $item->item->image) }}" 
-                                     class="rounded me-2" 
+                                <img src="{{ asset('storage/' . $item->item->image) }}"
+                                     class="rounded me-2"
                                      style="width: 50px; height: 50px; object-fit: cover;">
                                 {{ $item->item->name }}
                             </div>
@@ -36,7 +36,7 @@
                             <form action="{{ route('pegawai.cart.destroy', $item->id)}}" method="POST" class="d-inline">
                                 @csrf
                                 @method('DELETE')
-                                <button type="submit" 
+                                <button type="submit"
                                         class="btn btn-sm btn-danger"
                                         onclick="return confirm('Yakin hapus barang ini?')">
                                     Hapus
@@ -47,16 +47,16 @@
                     @endforeach
                 </tbody>
             </table>
-            
-            <div class="card-footer text-end">
-                <form action="{{ route('pegawai.permintaan.submit', $cart->id) }}" method="POST">
-                    @csrf
-                    <button type="submit" class="btn btn-primary"
-                            onclick="return confirm('Yakin ajukan permintaan ini?')">
-                        Ajukan Peminjaman
-                    </button>
-                </form>
-            </div>
+
+                <div class="card-footer text-end">
+                    <form action="{{ route('pegawai.permintaan.submit', $cart->id) }}" method="POST">
+                        @csrf
+                        <button type="submit" class="btn btn-primary"
+                                onclick="return confirm('Yakin ajukan permintaan ini?')">
+                            Ajukan Peminjaman
+                        </button>
+                    </form>
+                </div>
         @endif
     </div>
 </div>

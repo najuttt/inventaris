@@ -20,11 +20,17 @@ class Guest extends Model
 
     public function carts()
     {
-        return $this->hasMany(Guest_carts::class);
+        return $this->hasMany(Guest_carts::class, 'guest_id');
     }
 
     public function itemOuts()
     {
-        return $this->hasMany(Item_out_guest::class);
+        return $this->hasMany(Item_out::class, 'guest_id'); // pakai guest_id di item_outs
     }
+
+    public function guestCarts()
+    {
+        return $this->hasMany(Guest_carts::class, 'guest_id');
+    }
+
 }

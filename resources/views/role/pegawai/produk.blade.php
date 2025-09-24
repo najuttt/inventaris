@@ -5,8 +5,8 @@
         <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12">
             <div class="card h-100 shadow-sm border-0">
                 {{-- Gambar Produk --}}
-                <img src="{{ asset('storage/'. $item->image) }}" 
-                     class="card-img-top" 
+                <img src="{{ asset('storage/'. $item->image) }}"
+                     class="card-img-top"
                      alt="{{ $item->name }}"
                      style="height: 200px; object-fit: cover;">
 
@@ -23,15 +23,15 @@
                         <input type="hidden" name="items[0][item_id]" value="{{ $item->id }}">
                         <div class="d-flex align-items-center justify-content-between">
                             <div class="input-group" style="max-width: 120px;">
-                                <input type="number" 
-                                    name="items[0][quantity]" 
-                                    class="form-control text-center" 
-                                    value="1" min="1" 
-                                    max="{{ $item->stock }}" 
+                                <input type="number"
+                                    name="items[0][quantity]"
+                                    class="form-control text-center"
+                                    value="1" min="1"
+                                    max="{{ $item->stock }}"
                                     {{ $item->stock == 0 ? 'disabled' : '' }}>
                             </div>
-                            <button type="submit" 
-                                    class="btn btn-sm btn-primary ms-2" 
+                            <button type="submit"
+                                    class="btn btn-sm btn-primary ms-2"
                                     {{ $item->stock == 0 ? 'disabled' : '' }}>
                                 <i class="ri-shopping-cart-2-line"></i> Ajukan
                             </button>

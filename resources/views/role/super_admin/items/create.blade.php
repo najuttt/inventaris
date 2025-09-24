@@ -12,6 +12,7 @@
         <form action="{{ route('super_admin.items.store') }}" method="POST" enctype="multipart/form-data">
           @csrf
 
+          {{-- Nama Item --}}
           <div class="row mb-4">
             <label class="col-sm-2 col-form-label">Nama Item</label>
             <div class="col-sm-10">
@@ -20,6 +21,7 @@
             </div>
           </div>
 
+          {{-- Kategori --}}
           <div class="row mb-4">
             <label class="col-sm-2 col-form-label">Kategori</label>
             <div class="col-sm-10">
@@ -33,6 +35,7 @@
             </div>
           </div>
 
+          {{-- Satuan --}}
           <div class="row mb-4">
             <label class="col-sm-2 col-form-label">Satuan Barang</label>
             <div class="col-sm-10">
@@ -46,29 +49,36 @@
             </div>
           </div>
 
-          <div class="mb-3">
-              <label for="price" class="form-label">Harga</label>
+          {{-- Harga --}}
+          <div class="mb-4 row">
+            <label for="price" class="col-sm-2 col-form-label">Harga</label>
+            <div class="col-sm-10">
               <input type="number" name="price" id="price" class="form-control"
-                    value="{{ old('price') }}" step="0.01" required>
+                     value="{{ old('price') }}" step="0.01" required>
+              @error('price') <small class="text-danger">{{ $message }}</small> @enderror
+            </div>
           </div>
 
-          <div class="form-group mb-4">
-              <label for="image">Gambar</label>
+          {{-- Gambar --}}
+          <div class="mb-4 row">
+            <label for="image" class="col-sm-2 col-form-label">Gambar</label>
+            <div class="col-sm-10">
               <input type="file" name="image" id="image" class="form-control">
-              @if(isset($item) && $item->image)
-                  <img src="{{ asset('storage/' . $item->image) }}" alt="Gambar" width="100" class="mt-2">
-              @endif
+              @error('image') <small class="text-danger">{{ $message }}</small> @enderror
+            </div>
           </div>
 
+          {{-- Tombol --}}
           <div class="row justify-content-end">
             <div class="col-sm-10">
               <button type="submit" class="btn btn-primary btn-sm">Simpan</button>
               <a href="{{ route('super_admin.items.index') }}" class="btn btn-secondary btn-sm">Kembali</a>
             </div>
           </div>
+
         </form>
       </div>
     </div>
   </div>
-</div>  
+</div>
 @endsection

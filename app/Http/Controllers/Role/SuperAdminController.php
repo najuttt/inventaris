@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Role;
 
 use App\Http\Controllers\Controller;
+use App\Repositories\Eloquent\SuperAdminRepository;
 use Illuminate\Http\Request;
 use App\Models\Category;
 use App\Models\Item;
@@ -14,12 +15,22 @@ use Carbon\Carbon;
 
 class SuperAdminController extends Controller
 {
+
+     protected $superAdminRepository;
+
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function __construct(SuperAdminRepository $superAdminRepository)
+    {
+        $this->superAdminRepository = $superAdminRepository;
+    }
+
+    public function index(Request $request)
     {
         $itemIns = Item_in::with('item')->latest()->take(5)->get();
+        $period = $request->get('period', 'weekly');
+
 
         $expiredSoon = Item_in::whereNotNull('expired_at')
             ->whereBetween('expired_at', [Carbon::now(), Carbon::now()->addDays(30)])
@@ -27,12 +38,16 @@ class SuperAdminController extends Controller
             ->get();
 
         return view('role.super_admin.dashboard', [
-            'categories' => Category::count(),
-            'item' => Item::count(),
-            'suppliers' => Supplier::count(),
-            'users' => User::count(),
-            'itemIns' => $itemIns,
-            'expiredSoon' => $expiredSoon,
+            'categories'  => $this->superAdminRepository->getCategoriesCount(),
+            'item'        => $this->superAdminRepository->getItemsCount(),
+            'suppliers'   => $this->superAdminRepository->getSuppliersCount(),
+            'users'       => $this->superAdminRepository->getUsersCount(),
+            'itemIns'     => $this->superAdminRepository->getLatestItemIns(),
+            'itemOuts'    => $this->superAdminRepository->getLatestItemOuts(),
+            'expiredSoon' => $this->superAdminRepository->getExpiredSoon(),
+            'chartData'   => $this->superAdminRepository->getDashboardData($period),
+            'period'      => $period,
+            'topRequesters'  => $this->superAdminRepository->getTopRequesters(),
         ]);
     }
 

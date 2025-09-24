@@ -20,25 +20,68 @@ class Item extends Model
         'image',
     ];
 
+    protected $casts = [
+        'expired_at' => 'datetime',
+    ];
+
+    // === relasi ===
+    public function cartItems()
+    {
+        return $this->hasMany(CartItem::class, 'item_id');
+    }
+
+    public function carts()
+    {
+        return $this->belongsToMany(Cart::class, 'cart_items', 'item_id', 'cart_id')
+                    ->withPivot('quantity')
+                    ->withTimestamps();
+    }
+
+    public function itemIns()
+    {
+        return $this->hasMany(Item_in::class, 'item_id');
+    }
+
+    public function itemOuts()
+    {
+        return $this->hasMany(Item_out::class, 'item_id');
+    }
+
+    public function category()
+    {
+        return $this->belongsTo(Category::class);
+    }
+
+    public function creator()
+    {
+        return $this->belongsTo(User::class, 'created_by');
+    }
+
+    public function unit()
+    {
+        return $this->belongsTo(Unit::class);
+    }
+
+    public function supplier()
+    {
+        return $this->belongsTo(Supplier::class);
+    }
+
+    // === accessor/helper ===
     public function getExpiredCountAttribute()
     {
-        return $this->itemIn->where('expired_at', '<', now())->sum('quantity');
+        return $this->itemIns->where('expired_at', '<', now())->sum('quantity');
     }
 
     public function getNonExpiredCountAttribute()
     {
-        return $this->itemIn->where('expired_at', '>=', now())->sum('quantity');
+        return $this->itemIns->where('expired_at', '>=', now())->sum('quantity');
     }
 
     public function getPriceRupiahAttribute()
     {
         return 'Rp ' . number_format($this->price, 0, ',', '.');
     }
-
-
-    protected $casts = [
-        'expired_at' => 'datetime',
-    ];
 
     public function getBarcodeHtmlAttribute()
     {
@@ -58,18 +101,10 @@ class Item extends Model
         if (!$this->expired_at) {
             return 'no expired';
         }
-
         return $this->expired_at->isFuture() ? 'no expired' : 'expired';
     }
 
-    public function category()  { return $this->belongsTo(Category::class); }
-    public function creator()   { return $this->belongsTo(User::class, 'created_by'); }
-    public function cartItems() { return $this->hasMany(CartItem::class); }
-    public function itemIn()    { return $this->hasMany(Item_in::class); }
-    public function itemOut()   { return $this->hasMany(Item_out::class); }
-    public function unit()      { return $this->belongsTo(Unit::class); }
-    public function supplier()  { return $this->belongsTo(Supplier::class); }
-
+    // === auto generate code ===
     protected static function boot()
     {
         parent::boot();
@@ -77,7 +112,7 @@ class Item extends Model
         static::creating(function ($item) {
             if (empty($item->code)) {
                 $category = \App\Models\Category::find($item->category_id);
-                $prefix = $category ? strtoupper(substr($category->name, 0, 3)) : "ITM"; 
+                $prefix = $category ? strtoupper(substr($category->name, 0, 3)) : "ITM";
                 $item->code = self::generateUniqueCode($prefix);
             }
         });
@@ -88,5 +123,17 @@ class Item extends Model
         $date = now()->format('Ymd');
         $random = strtoupper(substr(uniqid(), -4));
         return "{$categoryCode}-{$date}-{$random}";
+    }
+
+    public function guestCartItems()
+    {
+        return $this->hasMany(Guest_carts_item::class, 'item_id');
+    }
+
+    public function guestCarts()
+    {
+        return $this->belongsToMany(Guest_carts::class, 'guest_cart_items', 'item_id', 'guest_cart_id')
+                    ->withPivot('quantity')
+                    ->withTimestamps();
     }
 }

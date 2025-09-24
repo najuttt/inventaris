@@ -29,7 +29,7 @@ class PermintaanController extends Controller
         try {
             DB::transaction(function () use ($request) {
                 $cart = Cart::firstOrCreate(
-                    ['user_id' => Auth::id(), 'status' => 'active'],
+                    ['user_id' => Auth::id(), 'status' => 'active'], // harus active
                     ['user_id' => Auth::id(), 'status' => 'active']
                 );
 
@@ -45,7 +45,7 @@ class PermintaanController extends Controller
                         'item_id' => $item->id,
                     ]);
 
-                    $cartItem->quantity += $itemData['quantity'];
+                    $cartItem->quantity = ($cartItem->quantity ?? 0) + $itemData['quantity'];
 
                     if ($cartItem->quantity > $item->stock) {
                         throw new \Exception("Jumlah melebihi stok {$item->name}.");
@@ -89,13 +89,23 @@ class PermintaanController extends Controller
     {
         $cart = Cart::where('id', $id)
             ->where('user_id', Auth::id())
-            ->where('status', 'active')
+            ->where('status', 'active') // cari cart yang masih aktif
+            ->with('cartItems.item')
             ->firstOrFail();
 
+        // kurangi stok semua item
+        foreach ($cart->cartItems as $cartItem) {
+            if ($cartItem->quantity > $cartItem->item->stock) {
+                return redirect()->back()->with('error', "Stok {$cartItem->item->name} tidak cukup.");
+            }
+            $cartItem->item->decrement('stock', $cartItem->quantity);
+        }
+
+        // ubah status jadi pending
         $cart->status = 'pending';
         $cart->save();
 
-        // Buat cart baru untuk transaksi berikutnya
+        // buat keranjang baru untuk user
         Cart::create([
             'user_id' => Auth::id(),
             'status'  => 'active',
