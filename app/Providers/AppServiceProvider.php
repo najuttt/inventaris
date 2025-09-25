@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use App\Models\Cart;
 use App\Models\CartItem;
+use App\Models\Item_out;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\View;
 use Milon\Barcode\Facades\DNS1DFacade as DNS1D;
@@ -30,16 +31,33 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         View::composer('*', function ($view) {
+            $cartsitems = null;
+            $notifications = collect();
+
             if (Auth::check()) {
-                $carts = Cart::where('user_id', Auth::id())->first();
-                if(! $carts){
-                    return null;
-                } else {
-                    $view->with('cartsitems', $carts);
-                    $cartsitem = CartItem::where('cart_id', $carts->id)->latest()->get();
+                // Ambil keranjang aktif user
+                $carts = Cart::where('user_id', Auth::id())
+                    ->where('status', 'active')
+                    ->with('cartItems.item')
+                    ->first();
+
+                if ($carts) {
+                    $cartsitems = $carts;
+                }
+
+                // Notifikasi hanya untuk role pegawai
+                if (Auth::user()->role === 'pegawai') {
+                    $notifications = Item_out::with(['item', 'approver'])
+                        ->whereHas('cart', fn($q) => $q->where('user_id', Auth::id()))
+                        ->whereNotNull('approved_by')
+                        ->latest()
+                        ->take(5)
+                        ->get();
                 }
             }
+
+            // Share ke semua view
+            $view->with(compact('cartsitems', 'notifications'));
         });
-        
     }
 }

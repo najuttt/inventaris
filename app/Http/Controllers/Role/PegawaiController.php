@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Item_out;
+use App\Models\Cart;
 
 class PegawaiController extends Controller
 {
@@ -17,9 +18,11 @@ class PegawaiController extends Controller
         $userId = Auth::id();
         $period = $request->get('period', 'weekly'); // default weekly
 
+        // Query dasar: hanya barang keluar yang sudah di-approve
         $query = Item_out::whereHas('cart', fn($q) => $q->where('user_id', $userId))
-            ->whereNotNull('approved_by'); // hanya barang keluar approved
+            ->whereNotNull('approved_by');
 
+        // Chart data sesuai periode
         switch ($period) {
             case 'daily':
                 $barangKeluar = $query
@@ -53,6 +56,20 @@ class PegawaiController extends Controller
                     ->pluck('total', 'label');
         }
 
+        // Keranjang aktif user
+        $cartsitems = Cart::where('user_id', $userId)
+            ->where('status', 'active')
+            ->with('cartItems.item')
+            ->first();
+
+        // Notifikasi: 5 barang keluar terakhir yang sudah di-approve
+        $notifications = Item_out::with(['item', 'approver'])
+            ->whereHas('cart', fn($q) => $q->where('user_id', $userId))
+            ->whereNotNull('approved_by') 
+            ->latest()
+            ->take(5)
+            ->get();
+
         // Hitung growth %
         $now = $barangKeluar->last() ?? 0;
         $prev = $barangKeluar->slice(-2, 1)->first() ?? 0;
@@ -66,11 +83,13 @@ class PegawaiController extends Controller
             ->paginate(10);
 
         return view('role.pegawai.dashboard', [
-            'labels'  => $barangKeluar->keys(),
-            'keluar'  => $barangKeluar->values(),
-            'growth'  => $growth,
-            'period'  => $period,
-            'history' => $history,
+            'labels'       => $barangKeluar->keys(),
+            'keluar'       => $barangKeluar->values(),
+            'growth'       => $growth,
+            'period'       => $period,
+            'history'      => $history,
+            'cartsitems'   => $cartsitems,
+            'notifications'=> $notifications,
         ]);
     }
 
