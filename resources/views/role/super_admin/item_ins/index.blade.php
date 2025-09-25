@@ -15,7 +15,6 @@
                     <th>Jumlah</th>
                     <th>Supplier</th>
                     <th>Expired</th>
-                    <th>Status</th>
                     <th>Dibuat Oleh</th>
                     <th>Actions</th>
                 </tr>
@@ -29,11 +28,6 @@
                     <td>{{ $row->quantity }}</td>
                     <td>{{ $row->supplier->name ?? '-' }}</td>
                     <td>{{ $row->expired_at ? $row->expired_at->format('d-m-Y') : '-' }}</td>
-                    <td>
-                        <span class="badge {{ $row->status === 'expired' ? 'bg-danger' : 'bg-success' }}">
-                            {{ $row->status }}
-                        </span>
-                    </td>
                     <td>{{ $row->creator->name ?? '-' }}</td>
                     <td>
                         <div class="dropdown">

@@ -7,6 +7,8 @@ use Milon\Barcode\DNS1D;
 
 class Item extends Model
 {
+    
+
     protected $fillable = [
         'name',
         'code',

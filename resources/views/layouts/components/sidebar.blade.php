@@ -90,33 +90,27 @@
             @if (auth()->user()->role === 'admin')
             <!-- Admin -->
             <li class="menu-header mt-7"><span class="menu-header-text">Admin</span></li>
+            <!-- ScanQr -->
+            <li class="menu-item {{ Route::is('admin.itemout') ? 'active' : '' }}">
+              <a href="{{route('admin.itemout')}}" class="menu-link">
+                <i class="bi bi-upc-scan"></i>
+                <div data-i18n="Basic">ScanQr</div><div class=""></div>
+              </a>
+            </li>
+            <!-- End ScanQr -->
             <!-- Cards -->
-            <li class="menu-item">
-              <a href="cards-basic.html" class="menu-link">
-                <i class="menu-icon icon-base ri ri-bank-card-2-line"></i>
-                <div data-i18n="Basic">Cards</div>
+            <li class="menu-item {{ Route::is('admin.request') ? 'active' : '' }}">
+              <a href="{{route('admin.request')}}" class="menu-link">
+                <i class="menu-icon icon-base ri ri-group-line"></i>
+                <div data-i18n="Basic">Request</div><div class=""></div>
               </a>
             </li>
             <!-- Cards -->
-            <li class="menu-item">
-              <a href="cards-basic.html" class="menu-link">
-                <i class="menu-icon icon-base ri ri-bank-card-2-line"></i>
-                <div data-i18n="Basic">Cards</div>
-              </a>
-            </li>
-            <!-- Cards -->
-            <li class="menu-item">
-              <a href="cards-basic.html" class="menu-link">
-                <i class="menu-icon icon-base ri ri-bank-card-2-line"></i>
-                <div data-i18n="Basic">Cards</div>
-              </a>
-            </li>
-            <!-- Cards -->
-            <li class="menu-item">
-              <a href="cards-basic.html" class="menu-link">
-                <i class="menu-icon icon-base ri ri-bank-card-2-line"></i>
-                <div data-i18n="Basic">Cards</div>
-              </a>
+            <li class="menu-item {{ Route::is('admin.guests.index') ? 'active' : '' }}">
+                <a href="{{ route('admin.guests.index') }}" class="menu-link">
+                    <i class="menu-icon icon-base ri ri-group-line"></i>
+                    <div data-i18n="Basic">Guest</div>
+                </a>
             </li>
             @endif
           </ul>

@@ -1,49 +1,52 @@
 @extends('layouts.index')
 @section('content')
-<div class="row gy-6">
-                <!-- Weekly Overview Chart -->
-                <div class="col-xl-8 col-md-6">
-                  <div class="card">
-                    <div class="card-header">
-                      <div class="d-flex justify-content-between">
-                        <h5 class="mb-1">Weekly Overview</h5>
-                        <div class="dropdown">
-                          <button
-                            class="btn text-body-secondary p-0"
-                            type="button"
-                            id="weeklyOverviewDropdown"
-                            data-bs-toggle="dropdown"
-                            aria-haspopup="true"
-                            aria-expanded="false">
-                            <i class="icon-base ri ri-more-2-line icon-24px"></i>
-                          </button>
-                          <div class="dropdown-menu dropdown-menu-end" aria-labelledby="weeklyOverviewDropdown">
-                            <a class="dropdown-item" href="javascript:void(0);">Refresh</a>
-                            <a class="dropdown-item" href="javascript:void(0);">Share</a>
-                            <a class="dropdown-item" href="javascript:void(0);">Update</a>
-                          </div>
+                <div class="row gy-6 mb-4">
+                  <!-- Chart -->
+                  <div class="col-xl-8 col-md-6">
+                    <div class="card shadow-sm border-0 rounded-3 overflow-hidden">
+                      <div class="card-header bg-white d-flex justify-content-between align-items-center">
+                        <div>
+                          <h6 class="text-muted mb-1">Ringkasan Barang Masuk dan Keluar</h6>
+                          <h5 class="fw-bold mb-0">Statistik Barang</h5>
+                        </div>
+                        <div class="text-end">
+                          <h4 class="fw-bold {{ $growth >= 0 ? 'text-success' : 'text-danger' }} mb-0">
+                            {{ number_format($growth, 1) }}%
+                          </h4>
+                          <small class="text-muted">dibanding periode sebelumnya</small>
                         </div>
                       </div>
-                    </div>
-                    <div class="card-body pt-lg-2">
-                      <div id="weeklyOverviewChart"></div>
-                      <div class="mt-1 mt-md-3">
-                        <div class="d-flex align-items-center gap-4">
-                          <h4 class="mb-0">45%</h4>
-                          <p class="mb-0">Your sales performance is 45% 😎 better compared to last month</p>
+                      <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                          <span class="text-muted">
+                            <i class="bi bi-graph-up-arrow me-2 text-primary"></i> Grafik berdasarkan periode
+                          </span>
+                          <div class="btn-group" id="chartFilterGroup">
+                             <button class="btn btn-sm btn-outline-primary rounded-pill px-3" data-period="daily">
+                              Harian
+                            </button>
+                            <button class="btn btn-sm btn-outline-primary rounded-pill px-3 active" data-period="weekly">
+                              Mingguan
+                            </button>
+                            <button class="btn btn-sm btn-outline-primary rounded-pill px-3" data-period="monthly">
+                              Bulanan
+                            </button>
+                            <button class="btn btn-sm btn-outline-primary rounded-pill px-3" data-period="yearly">
+                              Tahunan
+                            </button>
+                          </div>
                         </div>
-                        <div class="d-grid mt-3 mt-md-4">
-                          <button class="btn btn-primary" type="button">Details</button>
+                        <div class="chart-container" style="position: relative; height: 400px; width: 100%;">
+                          <canvas id="overviewChart"></canvas>
                         </div>
                       </div>
                     </div>
                   </div>
-                </div>
-                <!--/ Weekly Overview Chart -->
-                <!-- Four Cards -->
-                <div class="col-xl-4 col-md-6">
-                  <div class="row gy-6">
+                  <!-- /Chart -->
 
+                  <!-- Four Cards -->
+                  <div class="col-xl-4 col-md-6">
+                  <div class="row gy-6">
                     <!-- Total Categories -->
                     <div class="col-sm-6">
                       <div class="card h-100">
@@ -141,34 +144,37 @@
                     <!--/ Total Users -->
                   </div>
                 </div>
-                <!--/ four cards -->
+                </div>
 
                 <!-- Barang Masuk / Barang Keluar / Expired -->
                 <div class="col-xl-12">
-                  <div class="card-group">
-
+                  <div class="row g-4">
+                    
                     {{-- Barang Masuk --}}
-                    <div class="card mb-0">
-                      <div class="card-body card-separator">
-                        <div class="d-flex justify-content-between align-items-center flex-wrap mb-4">
-                          <h5 class="m-0 me-2">History Barang Masuk</h5>
-                          <a class="fw-medium" href="{{ route('super_admin.item_ins.index') }}">View all</a>
-                        </div>
-                        <div class="deposit-content pt-2">
-                          <ul class="p-0 m-0">
+                    <div class="col-md-4">
+                      <div class="card shadow-sm h-100 border-0 rounded-3">
+                        <div class="card-body">
+                          <div class="d-flex justify-content-between align-items-center mb-3">
+                            <h5 class="fw-bold mb-0">
+                              <i class="ri-box-3-line text-success me-1"></i> Barang Masuk
+                            </h5>
+                            <a class="fw-medium text-decoration-none small" href="{{ route('super_admin.item_ins.index') }}">
+                              Lihat semua
+                            </a>
+                          </div>
+                          <ul class="list-unstyled mb-0">
                             @forelse($itemIns as $item)
-                              <li class="d-flex mb-4 align-items-center pb-2">
-                                <div class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
-                                  <div class="me-2">
-                                    <h6 class="mb-0">{{ $item->item->name }}</h6>
-                                    <p class="mb-0">Jumlah: {{ $item->quantity }}</p>
-                                  </div>
+                              <li class="d-flex mb-3 align-items-center pb-2 border-bottom">
+                                <div class="flex-grow-1">
+                                  <h6 class="mb-1 fw-semibold">{{ $item->item->name }}</h6>
+                                  <small class="text-muted">Jumlah: {{ $item->quantity }}</small>
                                 </div>
+                                <span class="badge bg-success-subtle text-success">
+                                  +{{ $item->quantity }}
+                                </span>
                               </li>
                             @empty
-                              <li class="d-flex align-items-center">
-                                <p class="mb-0 text-muted">Belum ada data barang masuk</p>
-                              </li>
+                              <li class="text-muted fst-italic">Belum ada data barang masuk</li>
                             @endforelse
                           </ul>
                         </div>
@@ -176,75 +182,66 @@
                     </div>
 
                     {{-- Barang Keluar --}}
-                    <div class="card mb-0">
-                      <div class="card-body">
-                        <div class="d-flex justify-content-between align-items-center flex-wrap mb-4">
-                          <h5 class="m-0 me-2">History Barang Keluar</h5>
-                          <a class="fw-medium" href="">View all</a>
-                        </div>
-                        <div class="withdraw-content pt-2">
-                          <ul class="p-0 m-0">
-                            {{-- @forelse($itemOuts as $item)
-                              <li class="d-flex mb-4 align-items-center pb-2">
-                                <div class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
-                                  <div class="me-2">
-                                    <h6 class="mb-0">{{ $item->item->name }}</h6>
-                                    <p class="mb-0">Jumlah: {{ $item->quantity }}</p>
-                                  </div>
-                                  <h6 class="text-danger mb-0">-{{ $item->quantity }}</h6>
+                    <div class="col-md-4">
+                      <div class="card shadow-sm h-100 border-0 rounded-3">
+                        <div class="card-body">
+                          <div class="d-flex justify-content-between align-items-center mb-3">
+                            <h5 class="fw-bold mb-0">
+                              <i class="ri-logout-box-line text-danger me-1"></i> Barang Keluar
+                            </h5>
+                          </div>
+                          <ul class="list-unstyled mb-0">
+                            @forelse($itemOuts as $item)
+                              <li class="d-flex mb-3 align-items-center pb-2 border-bottom">
+                                <div class="flex-grow-1">
+                                  <h6 class="mb-1 fw-semibold">{{ $item->item->name }}</h6>
+                                  <small class="text-muted">
+                                    Jumlah: {{ $item->quantity }} <br>
+                                    Tanggal: {{ $item->created_at->format('d M Y') }}
+                                  </small>
                                 </div>
+                                <span class="badge bg-danger-subtle text-danger">
+                                  -{{ $item->quantity }}
+                                </span>
                               </li>
                             @empty
-                              <li class="d-flex align-items-center">
-                                <p class="mb-0 text-muted">Belum ada data barang keluar</p>
-                              </li>
-                            @endforelse --}}
+                              <li class="text-muted fst-italic">Belum ada data barang keluar</li>
+                            @endforelse
                           </ul>
                         </div>
                       </div>
                     </div>
 
-                    {{-- Barang Mau Expired --}}
-                    <div class="card mb-0">
-                      <div class="card-body">
-                        <div class="d-flex justify-content-between align-items-center flex-wrap mb-4">
-                          <h5 class="m-0 me-2">Barang Hampir Expired</h5>
-                          <a class="fw-medium" href="{{ route('super_admin.item_ins.index') }}">View all</a>
-                        </div>
-                        <div class="expired-content pt-2">
-                          <ul class="p-0 m-0">
+                    {{-- Barang Hampir Expired --}}
+                    <div class="col-md-4">
+                      <div class="card shadow-sm h-100 border-0 rounded-3">
+                        <div class="card-body">
+                          <div class="d-flex justify-content-between align-items-center mb-3">
+                            <h5 class="fw-bold mb-0">
+                              <i class="ri-alarm-warning-line text-warning me-1"></i> Barang Hampir Kadaluarsa
+                            </h5>
+                          </div>
+                          <ul class="list-unstyled mb-0">
                             @forelse($expiredSoon as $item)
-                              <li class="d-flex mb-4 align-items-center pb-2 border-bottom">
-                                <div class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
-                                  <div class="me-2">
-                                    <h6 class="mb-0">{{ $item->item->name }}</h6>
-                                    <p class="mb-0">
-                                      Jumlah: <strong>{{ $item->quantity }}</strong> <br>
-                                      Expired: 
-                                      <span class="badge bg-warning text-dark px-2 py-1">
-                                        {{ $item->expired_at->format('d M Y') }}
-                                      </span>
-                                      @php
-                                          $days = now()->startOfDay()->diffInDays($item->expired_at->startOfDay(), false);
-                                      @endphp
-
-                                      @if($days < 0)
-                                          <span class="badge bg-danger">
-                                              Sudah expired {{ abs($days) }} hari lalu
-                                          </span>
-                                      @else($days <= 30)
-                                          <span class="badge bg-warning text-dark">
-                                              Hampir expired ({{ $days }} hari lagi)
-                                          </span>
-                                      @endif
-                                    </p>
-                                  </div>
+                              <li class="d-flex mb-3 align-items-center pb-2 border-bottom">
+                                <div class="flex-grow-1">
+                                  <h6 class="mb-1 fw-semibold">{{ $item->item->name }}</h6>
+                                  <small class="text-muted">
+                                    Jumlah: {{ $item->quantity }} <br>
+                                    Kadaluarsa: {{ $item->expired_at->format('d M Y') }}
+                                  </small>
                                 </div>
+                                @php
+                                  $days = now()->startOfDay()->diffInDays($item->expired_at->startOfDay(), false);
+                                @endphp
+                                @if($days < 0)
+                                  <span class="badge bg-danger">Kadaluarsa {{ abs($days) }}h lalu</span>
+                                @else
+                                  <span class="badge bg-warning text-dark">({{ $days }}h lagi)</span>
+                                @endif
                               </li>
                             @empty
-                              <li class="d-flex align-items-center">
-                                <p class="mb-0 text-muted">Tidak ada barang yang hampir expired</p>
-                              </li>
+                              <li class="text-muted fst-italic">Tidak ada barang yang hampir kadaluarsa</li>
                             @endforelse
                           </ul>
                         </div>
@@ -256,16 +253,21 @@
                 <!-- /Barang Masuk / Barang Keluar / Expired -->
 
                 {{-- Export --}}
-                <!-- resources/views/export/index.blade.php -->
-                <div class="card shadow p-4">
-                    <h5 class="mb-3">Export Data</h5>
+                <div class="card shadow-sm border-0 rounded-3 p-4 mt-4 mb-4">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h5 class="fw-bold mb-0">
+                            <i class="bi bi-file-earmark-arrow-down me-2 text-primary"></i> Export Data
+                        </h5>
+                        <small class="text-muted">Pilih jenis data & format untuk diexport</small>
+                    </div>
+
                     <form id="exportForm" method="GET" action="">
-                        <div class="row g-3">
+                        <div class="row g-4">
                             <!-- Jenis Data -->
                             <div class="col-md-4">
-                                <label class="form-label">Jenis Data</label>
-                                <select class="form-select" name="type" id="type" required>
-                                    <option value="" disabled selected>Pilih Jenis</option>
+                                <label class="form-label fw-semibold">Jenis Data</label>
+                                <select class="form-select shadow-sm" name="type" id="type" required>
+                                    <option value="" disabled selected>-- Pilih Jenis --</option>
                                     <option value="barang_masuk">Barang Masuk</option>
                                     <option value="barang_keluar">Barang Keluar</option>
                                 </select>
@@ -273,9 +275,9 @@
 
                             <!-- Periode -->
                             <div class="col-md-4">
-                                <label class="form-label">Periode</label>
-                                <select class="form-select" name="period" id="period" required>
-                                    <option value="" disabled selected>Pilih Periode</option>
+                                <label class="form-label fw-semibold">Periode</label>
+                                <select class="form-select shadow-sm" name="period" id="period" required>
+                                    <option value="" disabled selected>-- Pilih Periode --</option>
                                     <option value="weekly">Minggu</option>
                                     <option value="monthly">Bulan</option>
                                     <option value="yearly">Tahun</option>
@@ -284,9 +286,9 @@
 
                             <!-- Format -->
                             <div class="col-md-4">
-                                <label class="form-label">Format</label>
-                                <select class="form-select" name="format" id="format" required>
-                                    <option value="" disabled selected>Pilih Format</option>
+                                <label class="form-label fw-semibold">Format</label>
+                                <select class="form-select shadow-sm" name="format" id="format" required>
+                                    <option value="" disabled selected>-- Pilih Format --</option>
                                     <option value="pdf">PDF</option>
                                     <option value="excel">Excel</option>
                                 </select>
@@ -294,8 +296,8 @@
                         </div>
 
                         <div class="mt-4 text-end">
-                            <button type="submit" class="btn btn-primary">
-                                <i class="bi bi-download"></i> Export
+                            <button type="submit" class="btn btn-primary px-4">
+                                <i class="bi bi-download me-2"></i> Export
                             </button>
                         </div>
                     </form>
@@ -332,193 +334,208 @@
                 </script>
                 {{-- End Export --}}
 
-                <!-- Data Tables -->
-                <div class="col-12">
-                  <div class="card overflow-hidden">
-                    <div class="table-responsive">
-                      <table class="table table-sm">
-                        <thead>
-                          <tr>
-                            <th class="text-truncate">User</th>
-                            <th class="text-truncate">Email</th>
-                            <th class="text-truncate">Role</th>
-                            <th class="text-truncate">Status</th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          <tr>
-                            <td>
-                              <div class="d-flex align-items-center">
-                                <div class="avatar avatar-sm me-4">
-                                  <img src="{{asset('assets/img/avatars/1.png')}}" alt="Avatar" class="rounded-circle" />
-                                </div>
-                                <div>
-                                  <h6 class="mb-0 text-truncate">Jordan Stevenson</h6>
-                                  <small class="text-truncate">@amiccoo</small>
-                                </div>
-                              </div>
-                            </td>
-                            <td class="text-truncate">susanna.Lind57@gmail.com</td>
-                            <td class="text-truncate">
-                              <div class="d-flex align-items-center">
-                                <i class="icon-base ri ri-vip-crown-line icon-22px text-primary me-2"></i>
-                                <span>Admin</span>
-                              </div>
-                            </td>
-                            <td><span class="badge bg-label-warning rounded-pill">Pending</span></td>
-                          </tr>
+                <!-- Top 5 Users -->
+              <div class="col-12">
+                <div class="card shadow-sm border-0 rounded-3 overflow-hidden">
+                  <div class="card-header d-flex justify-content-between align-items-center bg-white">
+                    <h5 class="fw-bold mb-0">
+                      <i class="bi bi-people-fill me-2 text-primary"></i> Top 5 User Paling Sering Keluarin Barang
+                    </h5>
+                    <small class="text-muted">Berdasarkan aktivitas pengeluaran barang</small>
+                  </div>
+
+                  <div class="table-responsive">
+                    <table class="table table-hover align-middle mb-0">
+                      <thead class="table-light">
+                        <tr>
+                          <th>User</th>
+                          <th>Email</th>
+                          <th>Role</th>
+                          <th>Total Keluar</th>
+                          <th>Status</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        @forelse($topUsers as $data)
                           <tr>
                             <td>
                               <div class="d-flex align-items-center">
-                                <div class="avatar avatar-sm me-4">
-                                  <img src="{{asset('assets/img/avatars/3.png')}}" alt="Avatar" class="rounded-circle" />
+                                <div class="avatar avatar-sm me-3">
+                                  <img src="{{ $data->cart->user->avatar_url ?? asset('assets/img/avatars/default.png') }}"
+                                      alt="Avatar" class="rounded-circle" />
                                 </div>
                                 <div>
-                                  <h6 class="mb-0 text-truncate">Benedetto Rossiter</h6>
-                                  <small class="text-truncate">@brossiter15</small>
+                                  <h6 class="mb-0 text-truncate">{{ $data->cart->user->name }}</h6>
+                                  <small class="text-muted">{{ '@' . Str::slug($data->cart->user->name, '') }}</small>
                                 </div>
                               </div>
                             </td>
-                            <td class="text-truncate">estelle.Bailey10@gmail.com</td>
-                            <td class="text-truncate">
-                              <div class="d-flex align-items-center">
-                                <i class="icon-base ri ri-edit-box-line text-warning icon-22px me-2"></i>
-                                <span>Editor</span>
-                              </div>
+                            <td class="text-truncate">{{ $data->cart->user->email }}</td>
+                            <td>
+                              <span class="badge bg-label-info rounded-pill">
+                                {{ ucfirst($data->cart->user->role) }}
+                              </span>
                             </td>
-                            <td><span class="badge bg-label-success rounded-pill">Active</span></td>
+                            <td>
+                              <span class="fw-semibold text-dark">{{ $data->total_out }}</span>
+                            </td>
+                            <td>
+                              @if($data->cart->user->status === 'active')
+                                <span class="badge bg-label-success rounded-pill">Active</span>
+                              @else
+                                <span class="badge bg-label-secondary rounded-pill">Inactive</span>
+                              @endif
+                            </td>
                           </tr>
+                        @empty
                           <tr>
-                            <td>
-                              <div class="d-flex align-items-center">
-                                <div class="avatar avatar-sm me-4">
-                                  <img src="{{asset('assets/img/avatars/2.png')}}" alt="Avatar" class="rounded-circle" />
-                                </div>
-                                <div>
-                                  <h6 class="mb-0 text-truncate">Bentlee Emblin</h6>
-                                  <small class="text-truncate">@bemblinf</small>
-                                </div>
-                              </div>
+                            <td colspan="5" class="text-center text-muted py-4">
+                              <i class="bi bi-exclamation-circle me-2"></i>
+                              Belum ada data user keluarin barang
                             </td>
-                            <td class="text-truncate">milo86@hotmail.com</td>
-                            <td class="text-truncate">
-                              <div class="d-flex align-items-center">
-                                <i class="icon-base ri ri-computer-line text-danger icon-22px me-2"></i>
-                                <span>Author</span>
-                              </div>
-                            </td>
-                            <td><span class="badge bg-label-success rounded-pill">Active</span></td>
                           </tr>
-                          <tr>
-                            <td>
-                              <div class="d-flex align-items-center">
-                                <div class="avatar avatar-sm me-4">
-                                  <img src="{{asset('assets/img/avatars/5.png')}}" alt="Avatar" class="rounded-circle" />
-                                </div>
-                                <div>
-                                  <h6 class="mb-0 text-truncate">Bertha Biner</h6>
-                                  <small class="text-truncate">@bbinerh</small>
-                                </div>
-                              </div>
-                            </td>
-                            <td class="text-truncate">lonnie35@hotmail.com</td>
-                            <td class="text-truncate">
-                              <div class="d-flex align-items-center">
-                                <i class="icon-base ri ri-edit-box-line text-warning icon-22px me-2"></i>
-                                <span>Editor</span>
-                              </div>
-                            </td>
-                            <td><span class="badge bg-label-warning rounded-pill">Pending</span></td>
-                          </tr>
-                          <tr>
-                            <td>
-                              <div class="d-flex align-items-center">
-                                <div class="avatar avatar-sm me-4">
-                                  <img src="{{asset('assets/img/avatars/4.png')}}" alt="Avatar" class="rounded-circle" />
-                                </div>
-                                <div>
-                                  <h6 class="mb-0 text-truncate">Beverlie Krabbe</h6>
-                                  <small class="text-truncate">@bkrabbe1d</small>
-                                </div>
-                              </div>
-                            </td>
-                            <td class="text-truncate">ahmad_Collins@yahoo.com</td>
-                            <td class="text-truncate">
-                              <div class="d-flex align-items-center">
-                                <i class="icon-base ri ri-pie-chart-2-line icon-22px text-info me-2"></i>
-                                <span>Maintainer</span>
-                              </div>
-                            </td>
-                            <td><span class="badge bg-label-success rounded-pill">Active</span></td>
-                          </tr>
-                          <tr>
-                            <td>
-                              <div class="d-flex align-items-center">
-                                <div class="avatar avatar-sm me-4">
-                                  <img src="{{asset('assets/img/avatars/7.png')}}" alt="Avatar" class="rounded-circle" />
-                                </div>
-                                <div>
-                                  <h6 class="mb-0 text-truncate">Bradan Rosebotham</h6>
-                                  <small class="text-truncate">@brosebothamz</small>
-                                </div>
-                              </div>
-                            </td>
-                            <td class="text-truncate">tillman.Gleason68@hotmail.com</td>
-                            <td class="text-truncate">
-                              <div class="d-flex align-items-center">
-                                <i class="icon-base ri ri-edit-box-line text-warning icon-22px me-2"></i>
-                                <span>Editor</span>
-                              </div>
-                            </td>
-                            <td><span class="badge bg-label-warning rounded-pill">Pending</span></td>
-                          </tr>
-                          <tr>
-                            <td>
-                              <div class="d-flex align-items-center">
-                                <div class="avatar avatar-sm me-4">
-                                  <img src="{{asset('assets/img/avatars/6.png')}}" alt="Avatar" class="rounded-circle" />
-                                </div>
-                                <div>
-                                  <h6 class="mb-0 text-truncate">Bree Kilday</h6>
-                                  <small class="text-truncate">@bkildayr</small>
-                                </div>
-                              </div>
-                            </td>
-                            <td class="text-truncate">otho21@gmail.com</td>
-                            <td class="text-truncate">
-                              <div class="d-flex align-items-center">
-                                <i class="icon-base ri ri-user-3-line icon-22px text-success me-2"></i>
-                                <span>Subscriber</span>
-                              </div>
-                            </td>
-                            <td><span class="badge bg-label-success rounded-pill">Active</span></td>
-                          </tr>
-                          <tr class="border-transparent">
-                            <td>
-                              <div class="d-flex align-items-center">
-                                <div class="avatar avatar-sm me-4">
-                                  <img src="{{asset('assets/img/avatars/1.png')}}" alt="Avatar" class="rounded-circle" />
-                                </div>
-                                <div>
-                                  <h6 class="mb-0 text-truncate">Breena Gallemore</h6>
-                                  <small class="text-truncate">@bgallemore6</small>
-                                </div>
-                              </div>
-                            </td>
-                            <td class="text-truncate">florencio.Little@hotmail.com</td>
-                            <td class="text-truncate">
-                              <div class="d-flex align-items-center">
-                                <i class="icon-base ri ri-user-3-line icon-22px text-success me-2"></i>
-                                <span>Subscriber</span>
-                              </div>
-                            </td>
-                            <td><span class="badge bg-label-secondary rounded-pill">Inactive</span></td>
-                          </tr>
-                        </tbody>
-                      </table>
-                    </div>
+                        @endforelse
+                      </tbody>
+                    </table>
                   </div>
                 </div>
-                <!--/ Data Tables -->
               </div>
+              <!-- /Top 5 Users -->
+              </div>
+              <style>
+                #chartFilterGroup .btn {
+                  transition: all 0.2s ease-in-out;
+                  font-weight: 500;
+                }
+                #chartFilterGroup .btn:hover {
+                  background-color: #750dfd;
+                  color: #fff;
+                }
+                #chartFilterGroup .btn.active {
+                  background-color: #7d0dfd;
+                  color: #fff;
+                  box-shadow: 0 0 8px rgba(207, 222, 245, 0.4);
+                }
+              </style>
 @endsection
+@push('scripts')
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+  const ctx = document.getElementById('overviewChart').getContext('2d');
+  const chartData = {
+    daily: {
+      labels: @json($dailyLabels),
+      masuk: @json($dailyMasuk),
+      keluar: @json($dailyKeluar)
+    },
+    weekly: {
+      labels: @json($weeklyLabels),
+      masuk: @json($weeklyMasuk),
+      keluar: @json($weeklyKeluar)
+    },
+    monthly: {
+      labels: @json($monthlyLabels),
+      masuk: @json($monthlyMasuk),
+      keluar: @json($monthlyKeluar)
+    },
+    yearly: {
+      labels: @json($yearlyLabels),
+      masuk: @json($yearlyMasuk),
+      keluar: @json($yearlyKeluar)
+    }
+  };
+
+  let currentPeriod = 'weekly';
+
+  const itemChart = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: chartData[currentPeriod].labels,
+      datasets: [
+        {
+          label: 'Barang Masuk',
+          data: chartData[currentPeriod].masuk,
+          backgroundColor: 'rgba(111, 66, 193, 0.7)',
+          borderRadius: 8,
+          borderSkipped: false
+        },
+        {
+          label: 'Barang Keluar',
+          data: chartData[currentPeriod].keluar,
+          backgroundColor: 'rgba(255, 99, 132, 0.7)',
+          borderRadius: 8,
+          borderSkipped: false
+        },
+        {
+          label: 'Trend Masuk',
+          data: chartData[currentPeriod].masuk,
+          type: 'line',
+          borderColor: 'rgba(111, 66, 193, 1)',
+          borderWidth: 2,
+          fill: false,
+          tension: 0.3,
+          pointBackgroundColor: 'rgba(111, 66, 193, 1)'
+        },
+        {
+          label: 'Trend Keluar',
+          data: chartData[currentPeriod].keluar,
+          type: 'line',
+          borderColor: 'rgba(255, 99, 132, 1)',
+          borderWidth: 2,
+          fill: false,
+          tension: 0.3,
+          pointBackgroundColor: 'rgba(255, 99, 132, 1)'
+        }
+      ]
+    },
+    options: {
+      responsive: true,
+      interaction: { mode: 'index', intersect: false },
+      plugins: {
+        legend: { 
+          labels: { 
+            color: '#444',
+            font: { size: 13, weight: 'bold' }
+          } 
+        },
+        tooltip: {
+          backgroundColor: '#222',
+          titleColor: '#fff',
+          bodyColor: '#fff',
+          padding: 10,
+          cornerRadius: 6
+        }
+      },
+      scales: {
+        x: { 
+          ticks: { color: '#6f42c1', font: { size: 12 } }, 
+          grid: { display: false } 
+        },
+        y: { 
+          beginAtZero: true, 
+          ticks: { color: '#6f42c1', font: { size: 12 } },
+          grid: { color: 'rgba(200,200,200,0.3)', borderDash: [5, 5] }
+        }
+      }
+    }
+  });
+
+  document.querySelectorAll('[data-period]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('[data-period]').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+
+      currentPeriod = btn.getAttribute('data-period');
+      const newData = chartData[currentPeriod];
+
+      itemChart.data.labels = newData.labels;
+      itemChart.data.datasets[0].data = newData.masuk;
+      itemChart.data.datasets[1].data = newData.keluar;
+      itemChart.data.datasets[2].data = newData.masuk;
+      itemChart.data.datasets[3].data = newData.keluar;
+
+      itemChart.update();
+    });
+  });
+</script>
+@endpush

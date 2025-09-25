@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Item_out extends Model
 {
-    protected $table = 'item_out';
+    protected $table = 'item_outs';
 
     protected $fillable = [
         'item_id',
@@ -34,5 +34,10 @@ class Item_out extends Model
     public function approver()
     {
         return $this->belongsTo(User::class, 'approved_by');
+    }
+
+     public function scopeApproved($query)
+    {
+        return $query->whereNotNull('approved_by');
     }
 }

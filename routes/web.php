@@ -14,6 +14,11 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\ExportController;
 use App\Http\Controllers\PermintaanController;
 use App\Http\Controllers\CartController;
+use App\Http\Controllers\ItemoutController;
+use App\Http\Controllers\RequestController;
+use App\Http\Controllers\GuestController;
+use App\Http\Controllers\ProdukController;
+use App\Http\Controllers\GuestCartController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -59,11 +64,34 @@ Route::middleware(['auth', 'role:super_admin'])
     });
 
 
-Route::middleware(['auth', 'role:admin'])
-    ->prefix('admin')
-    ->as('admin.')
-    ->group(function () {
-        Route::get('/dashboard', [AdminController::class, 'index'])->name('dashboard');
+    Route::middleware(['auth', 'role:admin'])
+        ->prefix('admin')
+        ->as('admin.')
+        ->group(function () {
+            Route::get('/dashboard', [AdminController::class, 'index'])->name('dashboard');
+            Route::get('/dashboard/data', [AdminController::class, 'getChartData']);
+
+            // Item Out
+            Route::get('/itemout', [ItemoutController::class, 'index'])->name('itemout');
+            Route::post('/itemout/scan/{cartItem}', [ItemoutController::class, 'scan'])->name('itemout.scan');
+            Route::post('/itemout/scan-id/{id}', [ItemoutController::class, 'scan'])->name('itemout.scan.id');
+            Route::get('/itemout/{cart}/struk', [ItemoutController::class, 'struk'])->name('itemout.struk');
+            Route::get('/itemout/struk/{id}', [ItemoutController::class, 'generateStruk'])->name('itemout.generate.struk');
+            Route::get('/itemout/receipt/{id}', [ItemoutController::class, 'receipt'])->name('itemout.receipt');
+
+            // Request
+            Route::get('/request', [RequestController::class, 'index'])->name('request');
+            Route::resource('carts', RequestController::class);
+
+            // Guests
+            Route::resource('guests', GuestController::class);
+
+            // produk guest
+            Route::get('/produk/guest/{id}', [ProdukController::class, 'showByGuest'])
+            ->name('produk.byGuest');
+
+            Route::post('/guest/{guest}/cart/add/{item}', [GuestCartController::class, 'addItem'])
+            ->name('guestCart.add');
     });
 
 
